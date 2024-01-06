@@ -32,9 +32,11 @@ class MyHomePage extends StatefulWidget {
 
 class MyHomePageState extends State<MyHomePage> {
   TextEditingController input = TextEditingController();
+  String? librarieId;
   bool checkboxSelected = true;
+  int rft = 0;
   List<String> btwItems = [];
-  String btwselect = "选择模板";
+  String? btwselect;
   List<DropdownMenuItem<String>> sqlItems = [
     const DropdownMenuItem(
       value: "127.0.0.1",
@@ -49,12 +51,47 @@ class MyHomePageState extends State<MyHomePage> {
       child: Text("192.168.10.254"),
     ),
   ];
-  String? sqlselect;
+  bool? sqlstatus;
+  String sqlselect = "192.168.2.189";
   List<String> printerItems = [];
-  String printerselect = "选择打印机";
+  String? printerselect;
   String text = "空闲中....";
+  void init() async {
+    final result = await initAll(sql: "192.168.2.189");
+    setState(() {
+      sqlstatus = result.sqlstatus;
+      btwItems = result.btws;
+      printerItems = result.printers;
+      librarieId = result.librarieId;
+    });
+  }
+
+  void prints() async {
+    if (checkboxSelected == true) {
+      setState(() {
+        rft = 0;
+      });
+    } else {
+      setState(() {
+        rft = 2;
+      });
+    }
+    final result = await print(
+        sn: input.text,
+        sql: sqlselect!,
+        printer: printerselect!,
+        btw: btwselect!,
+        float: 0,
+        id: librarieId!);
+
+    setState(() {
+      text = result;
+    });
+  }
+
   @override
   void initState() {
+    init();
     super.initState();
   }
 
@@ -74,9 +111,18 @@ class MyHomePageState extends State<MyHomePage> {
                   flex: 4,
                   child: TextField(
                     autofocus: true,
-                    decoration:
-                        const InputDecoration(prefixIcon: Icon(Icons.print)),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.camera),
+                      hintText: "扫码进行打印...",
+                      suffixIcon: IconButton(
+                        onPressed: input.clear,
+                        icon: const Icon(Icons.clear),
+                      ),
+                    ),
                     controller: input,
+                    onSubmitted: (value) {
+                      prints();
+                    },
                   ),
                 ),
                 const SizedBox(width: 20),
@@ -84,8 +130,7 @@ class MyHomePageState extends State<MyHomePage> {
                   icon: const Icon(Icons.print),
                   label: const Text("打印"),
                   onPressed: () {
-                    {}
-                    ;
+                    prints();
                   },
                 )
               ]),
@@ -93,30 +138,58 @@ class MyHomePageState extends State<MyHomePage> {
               Row(
                 children: [
                   DropdownButton(
+                    hint: const Text('192.168.2.189'),
                     items: sqlItems,
                     value: sqlselect,
-                    onChanged: (sql) => {setState(() => sqlselect = sql)},
+                    onChanged: (sql) => {setState(() => sqlselect = sql!)},
                   ),
+                  const SizedBox(width: 20),
+                  if (sqlstatus == true)
+                    Image.asset("images/right.png", width: 20, height: 20),
+                  if (sqlstatus == false)
+                    Image.asset("images/wrongs.png", width: 20, height: 20),
+                  const Spacer(),
                   DropdownButton(
+                    hint: const Text('请选择打印机'),
                     items: printerItems
                         .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                         .toList(),
                     value: printerselect,
-                    onChanged: (printer) =>
-                        {setState(() => printerselect = printer!)},
-                  )
+                    onChanged: (printer) => {
+                      setState(() {
+                        printerselect = printer!;
+                      })
+                    },
+                  ),
+                  const SizedBox(width: 20),
+                  if (printerItems.isEmpty)
+                    Image.asset("images/wrongs.png", width: 20, height: 20),
+                  if (printerselect == null && printerItems.isNotEmpty)
+                    Image.asset("images/wait.png", width: 20, height: 20),
+                  if (printerselect != null)
+                    Image.asset("images/right.png", width: 20, height: 20),
                 ],
               ),
               const SizedBox(height: 10),
               Row(
                 children: [
                   DropdownButton(
+                    hint: const Text('请选择模板'),
                     items: btwItems
                         .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                         .toList(),
                     value: btwselect,
                     onChanged: (btw) => {setState(() => btwselect = btw!)},
                   ),
+                  const SizedBox(width: 20),
+                  if (btwItems.isEmpty)
+                    Image.asset("images/wrongs.png", width: 20, height: 20),
+                  if (btwselect == null && btwItems.isNotEmpty)
+                    Image.asset("images/wait.png", width: 20, height: 20),
+                  if (btwselect != null)
+                    Image.asset("images/right.png", width: 20, height: 20),
+                  // const SizedBox(width: 20),
+                  const Spacer(),
                   const Text("RFT小数位:"),
                   Checkbox(
                     value: checkboxSelected, activeColor: Colors.red, //选中时的颜色
@@ -129,7 +202,12 @@ class MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               const SizedBox(height: 10),
-              Expanded(child: Text(text)),
+              Expanded(
+                  child: Text(
+                text,
+                style:
+                    const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              )),
             ],
           ),
         ),

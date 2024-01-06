@@ -61,9 +61,43 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  String greet({required String name, dynamic hint});
+  Future<ClientCompatTcpStream> client({required String sql, dynamic hint});
+
+  Future<String> getLibraries({dynamic hint});
+
+  Future<InitData> initAll({required String sql, dynamic hint});
 
   Future<void> initApp({dynamic hint});
+
+  Future<List<String>> loadBtws({required String id, dynamic hint});
+
+  Future<List<String>> loadPrinters({dynamic hint});
+
+  Future<String> print(
+      {required String sn,
+      required String sql,
+      required String id,
+      required String btw,
+      required String printer,
+      required int float,
+      dynamic hint});
+
+  Future<List<DataInfo>> runQuery(
+      {required String sn, required String sql, dynamic hint});
+
+  Future<bool> sqlInit({required String sql, dynamic hint});
+
+  Future<String> updata(
+      {required List<DataInfo> list, required String sql, dynamic hint});
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_ClientCompatTcpStream;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_ClientCompatTcpStream;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_ClientCompatTcpStreamPtr;
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -75,26 +109,72 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  String greet({required String name, dynamic hint}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        var arg0 = cst_encode_String(name);
-        return wire.wire_greet(arg0);
+  Future<ClientCompatTcpStream> client({required String sql, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        var arg0 = cst_encode_String(sql);
+        return wire.wire_client(port_, arg0);
       },
       codec: DcoCodec(
-        decodeSuccessData: dco_decode_String,
+        decodeSuccessData:
+            dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream,
         decodeErrorData: null,
       ),
-      constMeta: kGreetConstMeta,
-      argValues: [name],
+      constMeta: kClientConstMeta,
+      argValues: [sql],
       apiImpl: this,
       hint: hint,
     ));
   }
 
-  TaskConstMeta get kGreetConstMeta => const TaskConstMeta(
-        debugName: "greet",
-        argNames: ["name"],
+  TaskConstMeta get kClientConstMeta => const TaskConstMeta(
+        debugName: "client",
+        argNames: ["sql"],
+      );
+
+  @override
+  Future<String> getLibraries({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        return wire.wire_get_libraries(port_);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kGetLibrariesConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kGetLibrariesConstMeta => const TaskConstMeta(
+        debugName: "get_libraries",
+        argNames: [],
+      );
+
+  @override
+  Future<InitData> initAll({required String sql, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        var arg0 = cst_encode_String(sql);
+        return wire.wire_init_all(port_, arg0);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_init_data,
+        decodeErrorData: null,
+      ),
+      constMeta: kInitAllConstMeta,
+      argValues: [sql],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kInitAllConstMeta => const TaskConstMeta(
+        debugName: "init_all",
+        argNames: ["sql"],
       );
 
   @override
@@ -119,14 +199,245 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         argNames: [],
       );
 
+  @override
+  Future<List<String>> loadBtws({required String id, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        var arg0 = cst_encode_String(id);
+        return wire.wire_load_btws(port_, arg0);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_list_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kLoadBtwsConstMeta,
+      argValues: [id],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kLoadBtwsConstMeta => const TaskConstMeta(
+        debugName: "load_btws",
+        argNames: ["id"],
+      );
+
+  @override
+  Future<List<String>> loadPrinters({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        return wire.wire_load_printers(port_);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_list_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kLoadPrintersConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kLoadPrintersConstMeta => const TaskConstMeta(
+        debugName: "load_printers",
+        argNames: [],
+      );
+
+  @override
+  Future<String> print(
+      {required String sn,
+      required String sql,
+      required String id,
+      required String btw,
+      required String printer,
+      required int float,
+      dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        var arg0 = cst_encode_String(sn);
+        var arg1 = cst_encode_String(sql);
+        var arg2 = cst_encode_String(id);
+        var arg3 = cst_encode_String(btw);
+        var arg4 = cst_encode_String(printer);
+        var arg5 = cst_encode_u_32(float);
+        return wire.wire_print(port_, arg0, arg1, arg2, arg3, arg4, arg5);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kPrintConstMeta,
+      argValues: [sn, sql, id, btw, printer, float],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kPrintConstMeta => const TaskConstMeta(
+        debugName: "print",
+        argNames: ["sn", "sql", "id", "btw", "printer", "float"],
+      );
+
+  @override
+  Future<List<DataInfo>> runQuery(
+      {required String sn, required String sql, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        var arg0 = cst_encode_String(sn);
+        var arg1 = cst_encode_String(sql);
+        return wire.wire_run_query(port_, arg0, arg1);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_list_data_info,
+        decodeErrorData: null,
+      ),
+      constMeta: kRunQueryConstMeta,
+      argValues: [sn, sql],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kRunQueryConstMeta => const TaskConstMeta(
+        debugName: "run_query",
+        argNames: ["sn", "sql"],
+      );
+
+  @override
+  Future<bool> sqlInit({required String sql, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        var arg0 = cst_encode_String(sql);
+        return wire.wire_sql_init(port_, arg0);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_bool,
+        decodeErrorData: null,
+      ),
+      constMeta: kSqlInitConstMeta,
+      argValues: [sql],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kSqlInitConstMeta => const TaskConstMeta(
+        debugName: "sql_init",
+        argNames: ["sql"],
+      );
+
+  @override
+  Future<String> updata(
+      {required List<DataInfo> list, required String sql, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        var arg0 = cst_encode_list_data_info(list);
+        var arg1 = cst_encode_String(sql);
+        return wire.wire_updata(port_, arg0, arg1);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kUpdataConstMeta,
+      argValues: [list, sql],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kUpdataConstMeta => const TaskConstMeta(
+        debugName: "updata",
+        argNames: ["list", "sql"],
+      );
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_ClientCompatTcpStream => wire
+          .rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_ClientCompatTcpStream => wire
+          .rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream;
+
+  @protected
+  ClientCompatTcpStream
+      dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          dynamic raw) {
+    return ClientCompatTcpStream.dcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  ClientCompatTcpStream
+      dco_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(dynamic raw) {
+    return ClientCompatTcpStream.dcoDecode(raw as List<dynamic>);
+  }
+
   @protected
   String dco_decode_String(dynamic raw) {
     return raw as String;
   }
 
   @protected
+  bool dco_decode_bool(dynamic raw) {
+    return raw as bool;
+  }
+
+  @protected
+  DataInfo dco_decode_data_info(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 10)
+      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
+    return DataInfo(
+      sn: dco_decode_String(arr[0]),
+      cusPn: dco_decode_String(arr[1]),
+      sntitle: dco_decode_String(arr[2]),
+      inName: dco_decode_String(arr[3]),
+      inloss1: dco_decode_String(arr[4]),
+      reloss1: dco_decode_String(arr[5]),
+      outName: dco_decode_String(arr[6]),
+      inloss2: dco_decode_String(arr[7]),
+      reloss2: dco_decode_String(arr[8]),
+      printNum: dco_decode_i_32(arr[9]),
+    );
+  }
+
+  @protected
+  int dco_decode_i_32(dynamic raw) {
+    return raw as int;
+  }
+
+  @protected
+  InitData dco_decode_init_data(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return InitData(
+      librarieId: dco_decode_String(arr[0]),
+      printers: dco_decode_list_String(arr[1]),
+      btws: dco_decode_list_String(arr[2]),
+      sqlstatus: dco_decode_bool(arr[3]),
+    );
+  }
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw) {
+    return (raw as List<dynamic>).map(dco_decode_String).toList();
+  }
+
+  @protected
+  List<DataInfo> dco_decode_list_data_info(dynamic raw) {
+    return (raw as List<dynamic>).map(dco_decode_data_info).toList();
+  }
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw) {
     return raw as Uint8List;
+  }
+
+  @protected
+  int dco_decode_u_32(dynamic raw) {
+    return raw as int;
   }
 
   @protected
@@ -140,15 +451,109 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int dco_decode_usize(dynamic raw) {
+    return dcoDecodeI64OrU64(raw);
+  }
+
+  @protected
+  ClientCompatTcpStream
+      sse_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          SseDeserializer deserializer) {
+    return ClientCompatTcpStream.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  ClientCompatTcpStream
+      sse_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          SseDeserializer deserializer) {
+    return ClientCompatTcpStream.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer) {
     var inner = sse_decode_list_prim_u_8_strict(deserializer);
     return utf8.decoder.convert(inner);
   }
 
   @protected
+  bool sse_decode_bool(SseDeserializer deserializer) {
+    return deserializer.buffer.getUint8() != 0;
+  }
+
+  @protected
+  DataInfo sse_decode_data_info(SseDeserializer deserializer) {
+    var var_sn = sse_decode_String(deserializer);
+    var var_cusPn = sse_decode_String(deserializer);
+    var var_sntitle = sse_decode_String(deserializer);
+    var var_inName = sse_decode_String(deserializer);
+    var var_inloss1 = sse_decode_String(deserializer);
+    var var_reloss1 = sse_decode_String(deserializer);
+    var var_outName = sse_decode_String(deserializer);
+    var var_inloss2 = sse_decode_String(deserializer);
+    var var_reloss2 = sse_decode_String(deserializer);
+    var var_printNum = sse_decode_i_32(deserializer);
+    return DataInfo(
+        sn: var_sn,
+        cusPn: var_cusPn,
+        sntitle: var_sntitle,
+        inName: var_inName,
+        inloss1: var_inloss1,
+        reloss1: var_reloss1,
+        outName: var_outName,
+        inloss2: var_inloss2,
+        reloss2: var_reloss2,
+        printNum: var_printNum);
+  }
+
+  @protected
+  int sse_decode_i_32(SseDeserializer deserializer) {
+    return deserializer.buffer.getInt32();
+  }
+
+  @protected
+  InitData sse_decode_init_data(SseDeserializer deserializer) {
+    var var_librarieId = sse_decode_String(deserializer);
+    var var_printers = sse_decode_list_String(deserializer);
+    var var_btws = sse_decode_list_String(deserializer);
+    var var_sqlstatus = sse_decode_bool(deserializer);
+    return InitData(
+        librarieId: var_librarieId,
+        printers: var_printers,
+        btws: var_btws,
+        sqlstatus: var_sqlstatus);
+  }
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer) {
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <String>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_String(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<DataInfo> sse_decode_list_data_info(SseDeserializer deserializer) {
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <DataInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_data_info(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer) {
     var len_ = sse_decode_i_32(deserializer);
     return deserializer.buffer.getUint8List(len_);
+  }
+
+  @protected
+  int sse_decode_u_32(SseDeserializer deserializer) {
+    return deserializer.buffer.getUint32();
   }
 
   @protected
@@ -160,13 +565,38 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_decode_unit(SseDeserializer deserializer) {}
 
   @protected
-  int sse_decode_i_32(SseDeserializer deserializer) {
-    return deserializer.buffer.getInt32();
+  int sse_decode_usize(SseDeserializer deserializer) {
+    return deserializer.buffer.getUint64();
   }
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer) {
-    return deserializer.buffer.getUint8() != 0;
+  PlatformPointer
+      cst_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          ClientCompatTcpStream raw) {
+    // ignore: invalid_use_of_internal_member
+    return raw.cstEncode(move: true);
+  }
+
+  @protected
+  PlatformPointer cst_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      ClientCompatTcpStream raw) {
+    // ignore: invalid_use_of_internal_member
+    return raw.cstEncode();
+  }
+
+  @protected
+  bool cst_encode_bool(bool raw) {
+    return raw;
+  }
+
+  @protected
+  int cst_encode_i_32(int raw) {
+    return raw;
+  }
+
+  @protected
+  int cst_encode_u_32(int raw) {
+    return raw;
   }
 
   @protected
@@ -180,8 +610,74 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int cst_encode_usize(int raw) {
+    return raw;
+  }
+
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      ClientCompatTcpStream self, SseSerializer serializer) {
+    sse_encode_usize(self.sseEncode(move: true), serializer);
+  }
+
+  @protected
+  void sse_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      ClientCompatTcpStream self, SseSerializer serializer) {
+    sse_encode_usize(self.sseEncode(move: null), serializer);
+  }
+
+  @protected
   void sse_encode_String(String self, SseSerializer serializer) {
     sse_encode_list_prim_u_8_strict(utf8.encoder.convert(self), serializer);
+  }
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer) {
+    serializer.buffer.putUint8(self ? 1 : 0);
+  }
+
+  @protected
+  void sse_encode_data_info(DataInfo self, SseSerializer serializer) {
+    sse_encode_String(self.sn, serializer);
+    sse_encode_String(self.cusPn, serializer);
+    sse_encode_String(self.sntitle, serializer);
+    sse_encode_String(self.inName, serializer);
+    sse_encode_String(self.inloss1, serializer);
+    sse_encode_String(self.reloss1, serializer);
+    sse_encode_String(self.outName, serializer);
+    sse_encode_String(self.inloss2, serializer);
+    sse_encode_String(self.reloss2, serializer);
+    sse_encode_i_32(self.printNum, serializer);
+  }
+
+  @protected
+  void sse_encode_i_32(int self, SseSerializer serializer) {
+    serializer.buffer.putInt32(self);
+  }
+
+  @protected
+  void sse_encode_init_data(InitData self, SseSerializer serializer) {
+    sse_encode_String(self.librarieId, serializer);
+    sse_encode_list_String(self.printers, serializer);
+    sse_encode_list_String(self.btws, serializer);
+    sse_encode_bool(self.sqlstatus, serializer);
+  }
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer) {
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_String(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_data_info(
+      List<DataInfo> self, SseSerializer serializer) {
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_data_info(item, serializer);
+    }
   }
 
   @protected
@@ -189,6 +685,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       Uint8List self, SseSerializer serializer) {
     sse_encode_i_32(self.length, serializer);
     serializer.buffer.putUint8List(self);
+  }
+
+  @protected
+  void sse_encode_u_32(int self, SseSerializer serializer) {
+    serializer.buffer.putUint32(self);
   }
 
   @protected
@@ -200,12 +701,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_unit(void self, SseSerializer serializer) {}
 
   @protected
-  void sse_encode_i_32(int self, SseSerializer serializer) {
-    serializer.buffer.putInt32(self);
-  }
-
-  @protected
-  void sse_encode_bool(bool self, SseSerializer serializer) {
-    serializer.buffer.putUint8(self ? 1 : 0);
+  void sse_encode_usize(int self, SseSerializer serializer) {
+    serializer.buffer.putUint64(self);
   }
 }

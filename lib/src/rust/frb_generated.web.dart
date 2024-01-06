@@ -17,11 +17,45 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     required super.portManager,
   });
 
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_ClientCompatTcpStreamPtr => wire
+          .rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream;
+
+  @protected
+  ClientCompatTcpStream
+      dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          dynamic raw);
+
+  @protected
+  ClientCompatTcpStream
+      dco_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(dynamic raw);
+
   @protected
   String dco_decode_String(dynamic raw);
 
   @protected
+  bool dco_decode_bool(dynamic raw);
+
+  @protected
+  DataInfo dco_decode_data_info(dynamic raw);
+
+  @protected
+  int dco_decode_i_32(dynamic raw);
+
+  @protected
+  InitData dco_decode_init_data(dynamic raw);
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<DataInfo> dco_decode_list_data_info(dynamic raw);
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  int dco_decode_u_32(dynamic raw);
 
   @protected
   int dco_decode_u_8(dynamic raw);
@@ -30,10 +64,44 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void dco_decode_unit(dynamic raw);
 
   @protected
+  int dco_decode_usize(dynamic raw);
+
+  @protected
+  ClientCompatTcpStream
+      sse_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          SseDeserializer deserializer);
+
+  @protected
+  ClientCompatTcpStream
+      sse_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          SseDeserializer deserializer);
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
+  bool sse_decode_bool(SseDeserializer deserializer);
+
+  @protected
+  DataInfo sse_decode_data_info(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_i_32(SseDeserializer deserializer);
+
+  @protected
+  InitData sse_decode_init_data(SseDeserializer deserializer);
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<DataInfo> sse_decode_list_data_info(SseDeserializer deserializer);
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_u_32(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_8(SseDeserializer deserializer);
@@ -42,14 +110,47 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_decode_unit(SseDeserializer deserializer);
 
   @protected
-  int sse_decode_i_32(SseDeserializer deserializer);
-
-  @protected
-  bool sse_decode_bool(SseDeserializer deserializer);
+  int sse_decode_usize(SseDeserializer deserializer);
 
   @protected
   String cst_encode_String(String raw) {
     return raw;
+  }
+
+  @protected
+  List<dynamic> cst_encode_data_info(DataInfo raw) {
+    return [
+      cst_encode_String(raw.sn),
+      cst_encode_String(raw.cusPn),
+      cst_encode_String(raw.sntitle),
+      cst_encode_String(raw.inName),
+      cst_encode_String(raw.inloss1),
+      cst_encode_String(raw.reloss1),
+      cst_encode_String(raw.outName),
+      cst_encode_String(raw.inloss2),
+      cst_encode_String(raw.reloss2),
+      cst_encode_i_32(raw.printNum)
+    ];
+  }
+
+  @protected
+  List<dynamic> cst_encode_init_data(InitData raw) {
+    return [
+      cst_encode_String(raw.librarieId),
+      cst_encode_list_String(raw.printers),
+      cst_encode_list_String(raw.btws),
+      cst_encode_bool(raw.sqlstatus)
+    ];
+  }
+
+  @protected
+  List<dynamic> cst_encode_list_String(List<String> raw) {
+    return raw.map(cst_encode_String).toList();
+  }
+
+  @protected
+  List<dynamic> cst_encode_list_data_info(List<DataInfo> raw) {
+    return raw.map(cst_encode_data_info).toList();
   }
 
   @protected
@@ -58,17 +159,67 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   }
 
   @protected
+  PlatformPointer
+      cst_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          ClientCompatTcpStream raw);
+
+  @protected
+  PlatformPointer cst_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      ClientCompatTcpStream raw);
+
+  @protected
+  bool cst_encode_bool(bool raw);
+
+  @protected
+  int cst_encode_i_32(int raw);
+
+  @protected
+  int cst_encode_u_32(int raw);
+
+  @protected
   int cst_encode_u_8(int raw);
 
   @protected
   void cst_encode_unit(void raw);
 
   @protected
+  int cst_encode_usize(int raw);
+
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      ClientCompatTcpStream self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      ClientCompatTcpStream self, SseSerializer serializer);
+
+  @protected
   void sse_encode_String(String self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_data_info(DataInfo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_i_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_init_data(InitData self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_data_info(List<DataInfo> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_prim_u_8_strict(
       Uint8List self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_u_32(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_8(int self, SseSerializer serializer);
@@ -77,10 +228,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_unit(void self, SseSerializer serializer);
 
   @protected
-  void sse_encode_i_32(int self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_bool(bool self, SseSerializer serializer);
+  void sse_encode_usize(int self, SseSerializer serializer);
 }
 
 // Section: wire_class
@@ -93,10 +241,47 @@ class RustLibWire extends BaseWire {
       wasmModule.dart_fn_deliver_output(
           call_id, ptr_, rust_vec_len_, data_len_);
 
-  dynamic /* flutter_rust_bridge::for_generated::WireSyncRust2DartDco */
-      wire_greet(String name) => wasmModule.wire_greet(name);
+  void wire_client(NativePortType port_, String sql) =>
+      wasmModule.wire_client(port_, sql);
+
+  void wire_get_libraries(NativePortType port_) =>
+      wasmModule.wire_get_libraries(port_);
+
+  void wire_init_all(NativePortType port_, String sql) =>
+      wasmModule.wire_init_all(port_, sql);
 
   void wire_init_app(NativePortType port_) => wasmModule.wire_init_app(port_);
+
+  void wire_load_btws(NativePortType port_, String id) =>
+      wasmModule.wire_load_btws(port_, id);
+
+  void wire_load_printers(NativePortType port_) =>
+      wasmModule.wire_load_printers(port_);
+
+  void wire_print(NativePortType port_, String sn, String sql, String id,
+          String btw, String printer, int float) =>
+      wasmModule.wire_print(port_, sn, sql, id, btw, printer, float);
+
+  void wire_run_query(NativePortType port_, String sn, String sql) =>
+      wasmModule.wire_run_query(port_, sn, sql);
+
+  void wire_sql_init(NativePortType port_, String sql) =>
+      wasmModule.wire_sql_init(port_, sql);
+
+  void wire_updata(NativePortType port_, List<dynamic> list, String sql) =>
+      wasmModule.wire_updata(port_, list, sql);
+
+  void rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          dynamic ptr) =>
+      wasmModule
+          .rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+              ptr);
+
+  void rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          dynamic ptr) =>
+      wasmModule
+          .rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+              ptr);
 }
 
 @JS('wasm_bindgen')
@@ -114,8 +299,33 @@ class RustLibWasmModule implements WasmModule {
   external void dart_fn_deliver_output(int call_id,
       PlatformGeneralizedUint8ListPtr ptr_, int rust_vec_len_, int data_len_);
 
-  external dynamic /* flutter_rust_bridge::for_generated::WireSyncRust2DartDco */
-      wire_greet(String name);
+  external void wire_client(NativePortType port_, String sql);
+
+  external void wire_get_libraries(NativePortType port_);
+
+  external void wire_init_all(NativePortType port_, String sql);
 
   external void wire_init_app(NativePortType port_);
+
+  external void wire_load_btws(NativePortType port_, String id);
+
+  external void wire_load_printers(NativePortType port_);
+
+  external void wire_print(NativePortType port_, String sn, String sql,
+      String id, String btw, String printer, int float);
+
+  external void wire_run_query(NativePortType port_, String sn, String sql);
+
+  external void wire_sql_init(NativePortType port_, String sql);
+
+  external void wire_updata(
+      NativePortType port_, List<dynamic> list, String sql);
+
+  external void
+      rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          dynamic ptr);
+
+  external void
+      rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          dynamic ptr);
 }

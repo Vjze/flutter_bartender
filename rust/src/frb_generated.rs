@@ -18,6 +18,7 @@
 
 // Section: imports
 
+use crate::api::simple::*;
 use flutter_rust_bridge::for_generated::byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
 use flutter_rust_bridge::for_generated::transform_result_dco;
 use flutter_rust_bridge::{Handler, IntoIntoDart};
@@ -32,20 +33,72 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
-fn wire_greet_impl(
-    name: impl CstDecode<String>,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartDco {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::DcoCodec, _>(
+fn wire_client_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    sql: impl CstDecode<String>,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "greet",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+            debug_name: "client",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
         move || {
-            let api_name = name.cst_decode();
-            transform_result_dco((move || {
-                Result::<_, ()>::Ok(crate::api::simple::greet(api_name))
-            })())
+            let api_sql = sql.cst_decode();
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(
+                            flutter_rust_bridge::for_generated::rust_auto_opaque_encode(
+                                crate::api::simple::client(api_sql).await,
+                            ),
+                        )
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_get_libraries_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_libraries",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::get_libraries().await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_init_all_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    sql: impl CstDecode<String>,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "init_all",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_sql = sql.cst_decode();
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::init_all(api_sql).await)
+                    })()
+                    .await,
+                )
+            }
         },
     )
 }
@@ -65,18 +118,279 @@ fn wire_init_app_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
         },
     )
 }
+fn wire_load_btws_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    id: impl CstDecode<String>,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "load_btws",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_id = id.cst_decode();
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::load_btws(api_id).await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_load_printers_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "load_printers",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::load_printers().await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_print_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    sn: impl CstDecode<String>,
+    sql: impl CstDecode<String>,
+    id: impl CstDecode<String>,
+    btw: impl CstDecode<String>,
+    printer: impl CstDecode<String>,
+    float: impl CstDecode<u32>,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "print",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_sn = sn.cst_decode();
+            let api_sql = sql.cst_decode();
+            let api_id = id.cst_decode();
+            let api_btw = btw.cst_decode();
+            let api_printer = printer.cst_decode();
+            let api_float = float.cst_decode();
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(
+                            crate::api::simple::print(
+                                api_sn,
+                                api_sql,
+                                api_id,
+                                api_btw,
+                                api_printer,
+                                api_float,
+                            )
+                            .await,
+                        )
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_run_query_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    sn: impl CstDecode<String>,
+    sql: impl CstDecode<String>,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "run_query",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_sn = sn.cst_decode();
+            let api_sql = sql.cst_decode();
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::run_query(api_sn, api_sql).await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_sql_init_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    sql: impl CstDecode<String>,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "sql_init",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_sql = sql.cst_decode();
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::sql_init(api_sql).await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_updata_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    list: impl CstDecode<Vec<crate::api::simple::DataInfo>>,
+    sql: impl CstDecode<String>,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "updata",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_list = list.cst_decode();
+            let api_sql = sql.cst_decode();
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::simple::updata(api_list, api_sql).await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 
 // Section: dart2rust
 
+impl CstDecode<bool> for bool {
+    fn cst_decode(self) -> bool {
+        self
+    }
+}
+impl CstDecode<i32> for i32 {
+    fn cst_decode(self) -> i32 {
+        self
+    }
+}
+impl CstDecode<u32> for u32 {
+    fn cst_decode(self) -> u32 {
+        self
+    }
+}
 impl CstDecode<u8> for u8 {
     fn cst_decode(self) -> u8 {
         self
     }
 }
+impl CstDecode<usize> for usize {
+    fn cst_decode(self) -> usize {
+        self
+    }
+}
+impl SseDecode for flutter_rust_bridge::RustOpaque<std::sync::RwLock<Client<Compat<TcpStream>>>> {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return unsafe { flutter_rust_bridge::for_generated::sse_decode_rust_opaque(inner) };
+    }
+}
+
 impl SseDecode for String {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <Vec<u8>>::sse_decode(deserializer);
         return String::from_utf8(inner).unwrap();
+    }
+}
+
+impl SseDecode for bool {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_u8().unwrap() != 0
+    }
+}
+
+impl SseDecode for crate::api::simple::DataInfo {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_sn = <String>::sse_decode(deserializer);
+        let mut var_cusPn = <String>::sse_decode(deserializer);
+        let mut var_sntitle = <String>::sse_decode(deserializer);
+        let mut var_inName = <String>::sse_decode(deserializer);
+        let mut var_inloss1 = <String>::sse_decode(deserializer);
+        let mut var_reloss1 = <String>::sse_decode(deserializer);
+        let mut var_outName = <String>::sse_decode(deserializer);
+        let mut var_inloss2 = <String>::sse_decode(deserializer);
+        let mut var_reloss2 = <String>::sse_decode(deserializer);
+        let mut var_printNum = <i32>::sse_decode(deserializer);
+        return crate::api::simple::DataInfo {
+            sn: var_sn,
+            cus_pn: var_cusPn,
+            sntitle: var_sntitle,
+            in_name: var_inName,
+            inloss1: var_inloss1,
+            reloss1: var_reloss1,
+            out_name: var_outName,
+            inloss2: var_inloss2,
+            reloss2: var_reloss2,
+            print_num: var_printNum,
+        };
+    }
+}
+
+impl SseDecode for i32 {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_i32::<NativeEndian>().unwrap()
+    }
+}
+
+impl SseDecode for crate::api::simple::InitData {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_librarieId = <String>::sse_decode(deserializer);
+        let mut var_printers = <Vec<String>>::sse_decode(deserializer);
+        let mut var_btws = <Vec<String>>::sse_decode(deserializer);
+        let mut var_sqlstatus = <bool>::sse_decode(deserializer);
+        return crate::api::simple::InitData {
+            librarie_id: var_librarieId,
+            printers: var_printers,
+            btws: var_btws,
+            sqlstatus: var_sqlstatus,
+        };
+    }
+}
+
+impl SseDecode for Vec<String> {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<String>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::simple::DataInfo> {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::simple::DataInfo>::sse_decode(deserializer));
+        }
+        return ans_;
     }
 }
 
@@ -91,6 +405,12 @@ impl SseDecode for Vec<u8> {
     }
 }
 
+impl SseDecode for u32 {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_u32::<NativeEndian>().unwrap()
+    }
+}
+
 impl SseDecode for u8 {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         deserializer.cursor.read_u8().unwrap()
@@ -101,23 +421,124 @@ impl SseDecode for () {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {}
 }
 
-impl SseDecode for i32 {
+impl SseDecode for usize {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        deserializer.cursor.read_i32::<NativeEndian>().unwrap()
-    }
-}
-
-impl SseDecode for bool {
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        deserializer.cursor.read_u8().unwrap() != 0
+        deserializer.cursor.read_u64::<NativeEndian>().unwrap() as _
     }
 }
 
 // Section: rust2dart
 
+impl flutter_rust_bridge::IntoDart for crate::api::simple::DataInfo {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        vec![
+            self.sn.into_into_dart().into_dart(),
+            self.cus_pn.into_into_dart().into_dart(),
+            self.sntitle.into_into_dart().into_dart(),
+            self.in_name.into_into_dart().into_dart(),
+            self.inloss1.into_into_dart().into_dart(),
+            self.reloss1.into_into_dart().into_dart(),
+            self.out_name.into_into_dart().into_dart(),
+            self.inloss2.into_into_dart().into_dart(),
+            self.reloss2.into_into_dart().into_dart(),
+            self.print_num.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api::simple::DataInfo {}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::DataInfo>
+    for crate::api::simple::DataInfo
+{
+    fn into_into_dart(self) -> crate::api::simple::DataInfo {
+        self
+    }
+}
+impl flutter_rust_bridge::IntoDart for crate::api::simple::InitData {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        vec![
+            self.librarie_id.into_into_dart().into_dart(),
+            self.printers.into_into_dart().into_dart(),
+            self.btws.into_into_dart().into_dart(),
+            self.sqlstatus.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api::simple::InitData {}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::InitData>
+    for crate::api::simple::InitData
+{
+    fn into_into_dart(self) -> crate::api::simple::InitData {
+        self
+    }
+}
+
+impl SseEncode for flutter_rust_bridge::RustOpaque<std::sync::RwLock<Client<Compat<TcpStream>>>> {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
+    }
+}
+
 impl SseEncode for String {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <Vec<u8>>::sse_encode(self.into_bytes(), serializer);
+    }
+}
+
+impl SseEncode for bool {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_u8(self as _).unwrap();
+    }
+}
+
+impl SseEncode for crate::api::simple::DataInfo {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.sn, serializer);
+        <String>::sse_encode(self.cus_pn, serializer);
+        <String>::sse_encode(self.sntitle, serializer);
+        <String>::sse_encode(self.in_name, serializer);
+        <String>::sse_encode(self.inloss1, serializer);
+        <String>::sse_encode(self.reloss1, serializer);
+        <String>::sse_encode(self.out_name, serializer);
+        <String>::sse_encode(self.inloss2, serializer);
+        <String>::sse_encode(self.reloss2, serializer);
+        <i32>::sse_encode(self.print_num, serializer);
+    }
+}
+
+impl SseEncode for i32 {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_i32::<NativeEndian>(self).unwrap();
+    }
+}
+
+impl SseEncode for crate::api::simple::InitData {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.librarie_id, serializer);
+        <Vec<String>>::sse_encode(self.printers, serializer);
+        <Vec<String>>::sse_encode(self.btws, serializer);
+        <bool>::sse_encode(self.sqlstatus, serializer);
+    }
+}
+
+impl SseEncode for Vec<String> {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <String>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::simple::DataInfo> {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::simple::DataInfo>::sse_encode(item, serializer);
+        }
     }
 }
 
@@ -127,6 +548,12 @@ impl SseEncode for Vec<u8> {
         for item in self {
             <u8>::sse_encode(item, serializer);
         }
+    }
+}
+
+impl SseEncode for u32 {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_u32::<NativeEndian>(self).unwrap();
     }
 }
 
@@ -140,15 +567,12 @@ impl SseEncode for () {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
 }
 
-impl SseEncode for i32 {
+impl SseEncode for usize {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        serializer.cursor.write_i32::<NativeEndian>(self).unwrap();
-    }
-}
-
-impl SseEncode for bool {
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        serializer.cursor.write_u8(self as _).unwrap();
+        serializer
+            .cursor
+            .write_u64::<NativeEndian>(self as _)
+            .unwrap();
     }
 }
 
@@ -162,5 +586,8 @@ pub use io::*;
 #[cfg(target_family = "wasm")]
 #[path = "frb_generated.web.rs"]
 mod web;
+use tiberius::Client;
+use tokio::net::TcpStream;
+use tokio_util::compat::Compat;
 #[cfg(target_family = "wasm")]
 pub use web::*;

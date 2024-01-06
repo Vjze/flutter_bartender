@@ -18,11 +18,45 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     required super.portManager,
   });
 
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_ClientCompatTcpStreamPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStreamPtr;
+
+  @protected
+  ClientCompatTcpStream
+      dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          dynamic raw);
+
+  @protected
+  ClientCompatTcpStream
+      dco_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(dynamic raw);
+
   @protected
   String dco_decode_String(dynamic raw);
 
   @protected
+  bool dco_decode_bool(dynamic raw);
+
+  @protected
+  DataInfo dco_decode_data_info(dynamic raw);
+
+  @protected
+  int dco_decode_i_32(dynamic raw);
+
+  @protected
+  InitData dco_decode_init_data(dynamic raw);
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<DataInfo> dco_decode_list_data_info(dynamic raw);
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  int dco_decode_u_32(dynamic raw);
 
   @protected
   int dco_decode_u_8(dynamic raw);
@@ -31,10 +65,44 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void dco_decode_unit(dynamic raw);
 
   @protected
+  int dco_decode_usize(dynamic raw);
+
+  @protected
+  ClientCompatTcpStream
+      sse_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          SseDeserializer deserializer);
+
+  @protected
+  ClientCompatTcpStream
+      sse_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          SseDeserializer deserializer);
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
+  bool sse_decode_bool(SseDeserializer deserializer);
+
+  @protected
+  DataInfo sse_decode_data_info(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_i_32(SseDeserializer deserializer);
+
+  @protected
+  InitData sse_decode_init_data(SseDeserializer deserializer);
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<DataInfo> sse_decode_list_data_info(SseDeserializer deserializer);
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_u_32(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_8(SseDeserializer deserializer);
@@ -43,14 +111,30 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_decode_unit(SseDeserializer deserializer);
 
   @protected
-  int sse_decode_i_32(SseDeserializer deserializer);
-
-  @protected
-  bool sse_decode_bool(SseDeserializer deserializer);
+  int sse_decode_usize(SseDeserializer deserializer);
 
   @protected
   ffi.Pointer<wire_cst_list_prim_u_8_strict> cst_encode_String(String raw) {
     return cst_encode_list_prim_u_8_strict(utf8.encoder.convert(raw));
+  }
+
+  @protected
+  ffi.Pointer<wire_cst_list_String> cst_encode_list_String(List<String> raw) {
+    final ans = wire.cst_new_list_String(raw.length);
+    for (var i = 0; i < raw.length; ++i) {
+      ans.ref.ptr[i] = cst_encode_String(raw[i]);
+    }
+    return ans;
+  }
+
+  @protected
+  ffi.Pointer<wire_cst_list_data_info> cst_encode_list_data_info(
+      List<DataInfo> raw) {
+    final ans = wire.cst_new_list_data_info(raw.length);
+    for (var i = 0; i < raw.length; ++i) {
+      cst_api_fill_to_wire_data_info(raw[i], ans.ref.ptr[i]);
+    }
+    return ans;
   }
 
   @protected
@@ -62,17 +146,91 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   }
 
   @protected
+  void cst_api_fill_to_wire_data_info(
+      DataInfo apiObj, wire_cst_data_info wireObj) {
+    wireObj.sn = cst_encode_String(apiObj.sn);
+    wireObj.cus_pn = cst_encode_String(apiObj.cusPn);
+    wireObj.sntitle = cst_encode_String(apiObj.sntitle);
+    wireObj.in_name = cst_encode_String(apiObj.inName);
+    wireObj.inloss1 = cst_encode_String(apiObj.inloss1);
+    wireObj.reloss1 = cst_encode_String(apiObj.reloss1);
+    wireObj.out_name = cst_encode_String(apiObj.outName);
+    wireObj.inloss2 = cst_encode_String(apiObj.inloss2);
+    wireObj.reloss2 = cst_encode_String(apiObj.reloss2);
+    wireObj.print_num = cst_encode_i_32(apiObj.printNum);
+  }
+
+  @protected
+  void cst_api_fill_to_wire_init_data(
+      InitData apiObj, wire_cst_init_data wireObj) {
+    wireObj.librarie_id = cst_encode_String(apiObj.librarieId);
+    wireObj.printers = cst_encode_list_String(apiObj.printers);
+    wireObj.btws = cst_encode_list_String(apiObj.btws);
+    wireObj.sqlstatus = cst_encode_bool(apiObj.sqlstatus);
+  }
+
+  @protected
+  PlatformPointer
+      cst_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          ClientCompatTcpStream raw);
+
+  @protected
+  PlatformPointer cst_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      ClientCompatTcpStream raw);
+
+  @protected
+  bool cst_encode_bool(bool raw);
+
+  @protected
+  int cst_encode_i_32(int raw);
+
+  @protected
+  int cst_encode_u_32(int raw);
+
+  @protected
   int cst_encode_u_8(int raw);
 
   @protected
   void cst_encode_unit(void raw);
 
   @protected
+  int cst_encode_usize(int raw);
+
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      ClientCompatTcpStream self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      ClientCompatTcpStream self, SseSerializer serializer);
+
+  @protected
   void sse_encode_String(String self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_data_info(DataInfo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_i_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_init_data(InitData self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_data_info(List<DataInfo> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_prim_u_8_strict(
       Uint8List self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_u_32(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_8(int self, SseSerializer serializer);
@@ -81,10 +239,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_unit(void self, SseSerializer serializer);
 
   @protected
-  void sse_encode_i_32(int self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_bool(bool self, SseSerializer serializer);
+  void sse_encode_usize(int self, SseSerializer serializer);
 }
 
 // Section: wire_class
@@ -135,22 +290,55 @@ class RustLibWire implements BaseWire {
   late final _dart_fn_deliver_output = _dart_fn_deliver_outputPtr
       .asFunction<void Function(int, ffi.Pointer<ffi.Uint8>, int, int)>();
 
-  WireSyncRust2DartDco wire_greet(
-    ffi.Pointer<wire_cst_list_prim_u_8_strict> name,
+  void wire_client(
+    int port_,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> sql,
   ) {
-    return _wire_greet(
-      name,
+    return _wire_client(
+      port_,
+      sql,
     );
   }
 
-  late final _wire_greetPtr = _lookup<
+  late final _wire_clientPtr = _lookup<
           ffi.NativeFunction<
-              WireSyncRust2DartDco Function(
-                  ffi.Pointer<wire_cst_list_prim_u_8_strict>)>>(
-      'frbgen_flutter_bartender_wire_greet');
-  late final _wire_greet = _wire_greetPtr.asFunction<
-      WireSyncRust2DartDco Function(
-          ffi.Pointer<wire_cst_list_prim_u_8_strict>)>();
+              ffi.Void Function(
+                  ffi.Int64, ffi.Pointer<wire_cst_list_prim_u_8_strict>)>>(
+      'frbgen_flutter_bartender_wire_client');
+  late final _wire_client = _wire_clientPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_cst_list_prim_u_8_strict>)>();
+
+  void wire_get_libraries(
+    int port_,
+  ) {
+    return _wire_get_libraries(
+      port_,
+    );
+  }
+
+  late final _wire_get_librariesPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'frbgen_flutter_bartender_wire_get_libraries');
+  late final _wire_get_libraries =
+      _wire_get_librariesPtr.asFunction<void Function(int)>();
+
+  void wire_init_all(
+    int port_,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> sql,
+  ) {
+    return _wire_init_all(
+      port_,
+      sql,
+    );
+  }
+
+  late final _wire_init_allPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64, ffi.Pointer<wire_cst_list_prim_u_8_strict>)>>(
+      'frbgen_flutter_bartender_wire_init_all');
+  late final _wire_init_all = _wire_init_allPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_cst_list_prim_u_8_strict>)>();
 
   void wire_init_app(
     int port_,
@@ -165,6 +353,202 @@ class RustLibWire implements BaseWire {
           'frbgen_flutter_bartender_wire_init_app');
   late final _wire_init_app =
       _wire_init_appPtr.asFunction<void Function(int)>();
+
+  void wire_load_btws(
+    int port_,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> id,
+  ) {
+    return _wire_load_btws(
+      port_,
+      id,
+    );
+  }
+
+  late final _wire_load_btwsPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64, ffi.Pointer<wire_cst_list_prim_u_8_strict>)>>(
+      'frbgen_flutter_bartender_wire_load_btws');
+  late final _wire_load_btws = _wire_load_btwsPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_cst_list_prim_u_8_strict>)>();
+
+  void wire_load_printers(
+    int port_,
+  ) {
+    return _wire_load_printers(
+      port_,
+    );
+  }
+
+  late final _wire_load_printersPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'frbgen_flutter_bartender_wire_load_printers');
+  late final _wire_load_printers =
+      _wire_load_printersPtr.asFunction<void Function(int)>();
+
+  void wire_print(
+    int port_,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> sn,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> sql,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> id,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> btw,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> printer,
+    int float_,
+  ) {
+    return _wire_print(
+      port_,
+      sn,
+      sql,
+      id,
+      btw,
+      printer,
+      float_,
+    );
+  }
+
+  late final _wire_printPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Uint32)>>('frbgen_flutter_bartender_wire_print');
+  late final _wire_print = _wire_printPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          int)>();
+
+  void wire_run_query(
+    int port_,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> sn,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> sql,
+  ) {
+    return _wire_run_query(
+      port_,
+      sn,
+      sql,
+    );
+  }
+
+  late final _wire_run_queryPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64,
+                  ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+                  ffi.Pointer<wire_cst_list_prim_u_8_strict>)>>(
+      'frbgen_flutter_bartender_wire_run_query');
+  late final _wire_run_query = _wire_run_queryPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>)>();
+
+  void wire_sql_init(
+    int port_,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> sql,
+  ) {
+    return _wire_sql_init(
+      port_,
+      sql,
+    );
+  }
+
+  late final _wire_sql_initPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(
+                  ffi.Int64, ffi.Pointer<wire_cst_list_prim_u_8_strict>)>>(
+      'frbgen_flutter_bartender_wire_sql_init');
+  late final _wire_sql_init = _wire_sql_initPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_cst_list_prim_u_8_strict>)>();
+
+  void wire_updata(
+    int port_,
+    ffi.Pointer<wire_cst_list_data_info> list,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> sql,
+  ) {
+    return _wire_updata(
+      port_,
+      list,
+      sql,
+    );
+  }
+
+  late final _wire_updataPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Int64, ffi.Pointer<wire_cst_list_data_info>,
+                  ffi.Pointer<wire_cst_list_prim_u_8_strict>)>>(
+      'frbgen_flutter_bartender_wire_updata');
+  late final _wire_updata = _wire_updataPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_cst_list_data_info>,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>)>();
+
+  void
+      rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStreamPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_flutter_bartender_rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream');
+  late final _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream =
+      _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStreamPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+      rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStreamPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'frbgen_flutter_bartender_rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream');
+  late final _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream =
+      _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStreamPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  ffi.Pointer<wire_cst_list_String> cst_new_list_String(
+    int len,
+  ) {
+    return _cst_new_list_String(
+      len,
+    );
+  }
+
+  late final _cst_new_list_StringPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<wire_cst_list_String> Function(
+              ffi.Int32)>>('frbgen_flutter_bartender_cst_new_list_String');
+  late final _cst_new_list_String = _cst_new_list_StringPtr
+      .asFunction<ffi.Pointer<wire_cst_list_String> Function(int)>();
+
+  ffi.Pointer<wire_cst_list_data_info> cst_new_list_data_info(
+    int len,
+  ) {
+    return _cst_new_list_data_info(
+      len,
+    );
+  }
+
+  late final _cst_new_list_data_infoPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<wire_cst_list_data_info> Function(
+              ffi.Int32)>>('frbgen_flutter_bartender_cst_new_list_data_info');
+  late final _cst_new_list_data_info = _cst_new_list_data_infoPtr
+      .asFunction<ffi.Pointer<wire_cst_list_data_info> Function(int)>();
 
   ffi.Pointer<wire_cst_list_prim_u_8_strict> cst_new_list_prim_u_8_strict(
     int len,
@@ -197,4 +581,52 @@ final class wire_cst_list_prim_u_8_strict extends ffi.Struct {
 
   @ffi.Int32()
   external int len;
+}
+
+final class wire_cst_data_info extends ffi.Struct {
+  external ffi.Pointer<wire_cst_list_prim_u_8_strict> sn;
+
+  external ffi.Pointer<wire_cst_list_prim_u_8_strict> cus_pn;
+
+  external ffi.Pointer<wire_cst_list_prim_u_8_strict> sntitle;
+
+  external ffi.Pointer<wire_cst_list_prim_u_8_strict> in_name;
+
+  external ffi.Pointer<wire_cst_list_prim_u_8_strict> inloss1;
+
+  external ffi.Pointer<wire_cst_list_prim_u_8_strict> reloss1;
+
+  external ffi.Pointer<wire_cst_list_prim_u_8_strict> out_name;
+
+  external ffi.Pointer<wire_cst_list_prim_u_8_strict> inloss2;
+
+  external ffi.Pointer<wire_cst_list_prim_u_8_strict> reloss2;
+
+  @ffi.Int32()
+  external int print_num;
+}
+
+final class wire_cst_list_data_info extends ffi.Struct {
+  external ffi.Pointer<wire_cst_data_info> ptr;
+
+  @ffi.Int32()
+  external int len;
+}
+
+final class wire_cst_list_String extends ffi.Struct {
+  external ffi.Pointer<ffi.Pointer<wire_cst_list_prim_u_8_strict>> ptr;
+
+  @ffi.Int32()
+  external int len;
+}
+
+final class wire_cst_init_data extends ffi.Struct {
+  external ffi.Pointer<wire_cst_list_prim_u_8_strict> librarie_id;
+
+  external ffi.Pointer<wire_cst_list_String> printers;
+
+  external ffi.Pointer<wire_cst_list_String> btws;
+
+  @ffi.Bool()
+  external bool sqlstatus;
 }
