@@ -1,8 +1,8 @@
 use chrono::Local;
 use serde_json::json;
 // use super::init::{InitData, get_libraries, load_btws, load_printers};
-use tiberius::{AuthMethod, Config,  numeric::Numeric};
 use flutter_rust_bridge::spawn;
+use tiberius::{numeric::Numeric, AuthMethod, Config};
 pub async fn init_all(sql: String) -> InitData {
     // sleep(Duration::from_millis(1500)).await;
     let first = get_libraries().await;
@@ -38,7 +38,11 @@ pub async fn sql_init(sql: String) -> bool {
     match tcp {
         Ok(tcp) => {
             tcp.set_nodelay(true).unwrap();
-            let client = tiberius::Client::connect(config, tokio_util::compat::TokioAsyncWriteCompatExt::compat_write(tcp)).await;
+            let client = tiberius::Client::connect(
+                config,
+                tokio_util::compat::TokioAsyncWriteCompatExt::compat_write(tcp),
+            )
+            .await;
             match client {
                 Ok(_) => true,
                 Err(_e) => false,
@@ -110,7 +114,9 @@ pub async fn load_btws(id: String) -> Vec<String> {
     }
     list
 }
-pub async fn client(sql: String) -> tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>> {
+pub async fn client(
+    sql: String,
+) -> tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>> {
     let mut config = Config::new();
     config.host(sql);
     config.port(1433);
@@ -119,150 +125,151 @@ pub async fn client(sql: String) -> tiberius::Client<tokio_util::compat::Compat<
     config.authentication(AuthMethod::sql_server("hztest", "hztest"));
     config.trust_cert();
     // let tcp = TcpStream::connect(config.get_addr()).await.unwrap();
-    let tcp = tokio::net::TcpStream::connect(config.get_addr()).await.unwrap();
+    let tcp = tokio::net::TcpStream::connect(config.get_addr())
+        .await
+        .unwrap();
     tcp.set_nodelay(true).unwrap();
-    let client = tiberius::Client::connect(config, tokio_util::compat::TokioAsyncWriteCompatExt::compat_write(tcp)).await.unwrap();
+    let client = tiberius::Client::connect(
+        config,
+        tokio_util::compat::TokioAsyncWriteCompatExt::compat_write(tcp),
+    )
+    .await
+    .unwrap();
     client
 }
 pub async fn run_query(sn: String, sql: String) -> Vec<DataInfo> {
-    let sn_check = examine(sn.clone(), sql.clone()).await;
-    match sn_check {
-        true => {
+    let sn = sn.clone();
+    let mut list = vec![];
+    let mut client = client(sql.clone()).await;
+    let queryvalues =
+        "cus_pn, SNTitle, In_name, Inloss1, Reloss1, out_name, Inloss2, Reloss1, print_num";
+    let query_ty = format!("where SN = '{}'", sn);
+    let query_code = format!("select {} from  testdata_cy {}", queryvalues, query_ty);
+    let stream = client.simple_query(query_code).await.unwrap();
+    let result = stream.into_row().await.unwrap();
+    match result {
+        Some(r) => {
             let sn = sn.clone();
-            let mut list = vec![];
-            let mut client = client(sql.clone()).await;
-            let queryvalues =
-                "cus_pn, SNTitle, In_name, Inloss1, Reloss1, out_name, Inloss2, Reloss1, print_num";
-            let query_ty = format!("where SN = '{}'", sn);
-            let query_code = format!("select {} from  testdata_cy {}", queryvalues, query_ty);
-            let stream = client.simple_query(query_code).await.unwrap();
-            let result = stream.into_row().await.unwrap();
-            match result {
-                Some(r) => {
-                    let sn = sn.clone();
-                    let cus_pn = r.get::<&str, _>(0).unwrap().to_string();
-                    let sntitle = r.get::<&str, _>(1).unwrap().to_string();
-                    let in_name = r.get::<&str, _>(2).unwrap().to_string();
-                    let inloss1 = r.get::<Numeric, _>(3).unwrap().to_string();
-                    let reloss1 = r.get::<Numeric, _>(4).unwrap().to_string();
-                    let out_name = r.get::<&str, _>(5).unwrap().to_string();
-                    let inloss2 = r.get::<Numeric, _>(6).unwrap().to_string();
-                    let reloss2 = r.get::<Numeric, _>(7).unwrap().to_string();
-                    let print_num = r.get::<i32, _>(8).unwrap();
-                    let datainfo = DataInfo {
-                        sn,
-                        cus_pn,
-                        sntitle,
-                        in_name,
-                        inloss1,
-                        reloss1,
-                        out_name,
-                        inloss2,
-                        reloss2,
-                        print_num,
-                    };
-                    list.push(datainfo);
-                    list
-                }
-                None => vec![],
-            }
+            let cus_pn = r.get::<&str, _>(0).unwrap().to_string();
+            let sntitle = r.get::<&str, _>(1).unwrap().to_string();
+            let in_name = r.get::<&str, _>(2).unwrap().to_string();
+            let inloss1 = r.get::<Numeric, _>(3).unwrap().to_string();
+            let reloss1 = r.get::<Numeric, _>(4).unwrap().to_string();
+            let out_name = r.get::<&str, _>(5).unwrap().to_string();
+            let inloss2 = r.get::<Numeric, _>(6).unwrap().to_string();
+            let reloss2 = r.get::<Numeric, _>(7).unwrap().to_string();
+            let print_num = r.get::<i32, _>(8).unwrap();
+            let datainfo = DataInfo {
+                sn,
+                cus_pn,
+                sntitle,
+                in_name,
+                inloss1,
+                reloss1,
+                out_name,
+                inloss2,
+                reloss2,
+                print_num,
+            };
+            list.push(datainfo);
+            list
         }
-        false => vec![],
+        None => vec![],
     }
 }
-async fn examine(sn: String, sql: String) -> bool {
-    if sn.is_empty() {
-        return false;
-    } else {
-        let mut client = client(sql).await;
-        let query_ty = format!("where SN = '{}'", sn);
-        let query_code = format!("select print_num from  testdata_cy {}", query_ty);
-        let stream = client.simple_query(query_code).await.unwrap();
-        let result = stream.into_row().await.unwrap();
-        match result {
-            Some(row) => {
-                let status = row.get::<i32, _>(0).unwrap();
-                if status == 0 {
-                    true
-                } else {
-                    false
-                }
+async fn examine(sn: String, sql: String) -> String {
+    let mut client = client(sql).await;
+    let query_ty = format!("where SN = '{}'", sn);
+    let query_code = format!("select print_num from  testdata_cy {}", query_ty);
+    let stream = client.simple_query(query_code).await.unwrap();
+    let result = stream.into_row().await.unwrap();
+    match result {
+        Some(row) => {
+            let status = row.get::<i32, _>(0).unwrap();
+            if status == 0 {
+                "Ok".to_string()
+            } else {
+                "条码非第一次打印".to_string()
             }
-            None => false,
         }
+        None => "Sn不存在".to_string(),
     }
 }
 pub async fn do_print(
-    sn:String,
-    sql:String,
+    sn: String,
+    sql: String,
     id: String,
     btw: String,
     printer: String,
     float: u32,
 ) -> String {
-    let datainfos = run_query(sn, sql.clone()).await;
-    let datainfo = datainfos.get(0).unwrap();
-    let sn = datainfo.sn.clone();
-    let pn = datainfo.cus_pn.clone();
-    let sntitle = datainfo.sntitle.clone();
-    let in_name = datainfo.in_name.clone();
-    let out_name = datainfo.out_name.clone();
-    let inloss1_c = &datainfo.inloss1[..3];
-    let inloss2_c = &datainfo.inloss2[..3];
-    let pt: usize = if float == 2 { 5 } else { 2 };
-    let printer = printer.clone();
-    let reloss1_c = &datainfo.reloss1[..pt];
-    let reloss2_c = &datainfo.reloss2[..pt];
-    let btw = &btw.clone();
-    let data = json!({
-                            // 模版库的ID
-                        "LibraryID": format!("{}",id),
-                            // 模版的绝对路径,与相对路径二者选其一
-                        // "AbsolutePath": "global_test.btw",
-                            // 模版的相对路径，例如：Automotive/AIAG/B-10/BMW.btw
-                        "relativePath": format!("{}",btw),
+    let sn_check = examine(sn.clone(), sql.clone()).await;
+    if sn_check == "Ok" {
+        let datainfos = run_query(sn, sql.clone()).await;
+        let datainfo = datainfos.get(0).unwrap();
+        let sn = datainfo.sn.clone();
+        let pn = datainfo.cus_pn.clone();
+        let sntitle = datainfo.sntitle.clone();
+        let in_name = datainfo.in_name.clone();
+        let out_name = datainfo.out_name.clone();
+        let inloss1_c = &datainfo.inloss1[..3];
+        let inloss2_c = &datainfo.inloss2[..3];
+        let pt: usize = if float == 2 { 5 } else { 2 };
+        let printer = printer.clone();
+        let reloss1_c = &datainfo.reloss1[..pt];
+        let reloss2_c = &datainfo.reloss2[..pt];
+        let btw = &btw.clone();
+        let data = json!({
+                                // 模版库的ID
+                            "LibraryID": format!("{}",id),
+                                // 模版的绝对路径,与相对路径二者选其一
+                            // "AbsolutePath": "global_test.btw",
+                                // 模版的相对路径，例如：Automotive/AIAG/B-10/BMW.btw
+                            "relativePath": format!("{}",btw),
 
-                            // 打印机名称
-                        "printer": format!("{}",printer),
-                            // 起始位置（一般不传，从参数中拿掉）
-                        // "StartingPosition": 1,
-                            // /打印份数
-                        "Copies": 1,
-                            // 自增序列
-                        "SerialNumbers": format!("{}",0),
-                            // 老版软件设置参数接口
-                        // "DataEntryControls": {
-                            // 新版软件设置参数接口
-                        "namedDataSources": {
-                            "SN":format!("{}",sn),
-                            "PN":format!("{}",pn),
-                            "TITLE":format!("{}",sntitle),
-                            "INLOSS1":format!("≤{}dB",inloss1_c),
-                            "INLOSS2":format!("≤{}dB",inloss2_c),
-                            "JK1":format!("{}",in_name),
-                            "JK2":format!("{}",out_name),
-                            "RELOSS1":format!("≥{}dB",reloss1_c),
-                            "RELOSS2":format!("≥{}dB",reloss2_c),
-    }
+                                // 打印机名称
+                            "printer": format!("{}",printer),
+                                // 起始位置（一般不传，从参数中拿掉）
+                            // "StartingPosition": 1,
+                                // /打印份数
+                            "Copies": 1,
+                                // 自增序列
+                            "SerialNumbers": format!("{}",0),
+                                // 老版软件设置参数接口
+                            // "DataEntryControls": {
+                                // 新版软件设置参数接口
+                            "namedDataSources": {
+                                "SN":format!("{}",sn),
+                                "PN":format!("{}",pn),
+                                "TITLE":format!("{}",sntitle),
+                                "INLOSS1":format!("≤{}dB",inloss1_c),
+                                "INLOSS2":format!("≤{}dB",inloss2_c),
+                                "JK1":format!("{}",in_name),
+                                "JK2":format!("{}",out_name),
+                                "RELOSS1":format!("≥{}dB",reloss1_c),
+                                "RELOSS2":format!("≥{}dB",reloss2_c),
+        }
+            });
+        println!("data = {}", data);
+
+        let worker_thread = spawn(async move {
+            let url = "http://192.168.2.186/BarTender/api/v1/print";
+            let res = ureq::post(url).send_json(data).unwrap();
+            let value = res.status_text();
+            let res = if value == "OK" {
+                updata(datainfos, sql).await
+            } else {
+                "打印错误".to_string()
+            };
+            res
         });
-    println!("data = {}", data);
+        match worker_thread.await {
+            Ok(b) => b,
 
-    let worker_thread = spawn(async move {
-        let url = "http://192.168.2.186/BarTender/api/v1/print";
-        let res = ureq::post(url).send_json(data).unwrap();
-        let value = res.status_text();
-        let res = if value == "OK"{
-            updata(datainfos, sql).await
-        }else {
-            "打印错误".to_string()
-        };
-        res
-        
-    });
-    match worker_thread.await {
-        Ok(b) => b,
-
-        Err(_e) => "打印错误".to_string(),
+            Err(_e) => "打印错误".to_string(),
+        }
+    } else {
+        sn_check
     }
 }
 
@@ -283,11 +290,10 @@ pub async fn updata(list: Vec<DataInfo>, sql: String) -> String {
         )
         .await;
     match stream {
-        Ok(_) => "已完成！".to_string(),
-        Err(e) =>e.to_string() ,
+        Ok(_) => "打印完成!!!".to_string(),
+        Err(e) => e.to_string(),
     }
 }
-
 
 #[flutter_rust_bridge::frb(init)]
 pub fn init_app() {

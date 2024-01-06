@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bartender/src/rust/api/simple.dart';
 import 'package:flutter_bartender/src/rust/frb_generated.dart';
@@ -57,6 +58,13 @@ class MyHomePageState extends State<MyHomePage> {
   List<String> printerItems = [];
   String? printerselect;
   String text = "空闲中....";
+  void initsql() async {
+    final res = await sqlInit(sql: sqlselect);
+    setState(() {
+      sqlstatus = res;
+    });
+  }
+
   void init() async {
     final result = await initAll(sql: "192.168.2.189");
     setState(() {
@@ -67,10 +75,30 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void showCupertinoDialogSure(body) {
+    var dialog = CupertinoAlertDialog(
+      title: const Text('提示'),
+      content: Text(
+        body,
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+      actions: <Widget>[
+        CupertinoButton(
+          child: const Text("确定"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+
+    showDialog(context: context, builder: (_) => dialog);
+  }
+
   void doBarcodeScan() async {
     var options = const ScanOptions(
         //是否自动打开闪光灯
-        autoEnableFlash: true,
+        autoEnableFlash: false,
         strings: {'cancel': '取消', 'flash_on': '打开闪光灯', 'flash_off': '关闭闪光灯'});
     var cresult = await BarcodeScanner.scan(options: options);
     setState(() {
@@ -83,6 +111,34 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   void doprint() async {
+    if (input.text.isEmpty) {
+      showCupertinoDialogSure('输入框不能为空！！！');
+      setState(() {
+        text = "空闲中....";
+      });
+      return;
+    }
+    if (sqlstatus == false) {
+      showCupertinoDialogSure('数据库未连接！！！');
+      setState(() {
+        text = "空闲中....";
+      });
+      return;
+    }
+    if (btwselect == null) {
+      showCupertinoDialogSure('未选择模板！！！');
+      setState(() {
+        text = "空闲中....";
+      });
+      return;
+    }
+    if (printerselect == null) {
+      showCupertinoDialogSure('未选择打印机！！！');
+      setState(() {
+        text = "空闲中....";
+      });
+      return;
+    }
     if (checkboxSelected == true) {
       setState(() {
         rft = 0;
@@ -101,10 +157,17 @@ class MyHomePageState extends State<MyHomePage> {
         btw: btwselect!,
         float: 0,
         id: librarieId!);
-
-    setState(() {
-      text = result;
-    });
+    if (result == "打印完成!!!") {
+      setState(() {
+        text = result;
+      });
+    } else {
+      showCupertinoDialogSure(result);
+      setState(() {
+        text = "空闲中....";
+      });
+      return;
+    }
   }
 
   @override
@@ -169,7 +232,12 @@ class MyHomePageState extends State<MyHomePage> {
                     hint: const Text('192.168.2.189'),
                     items: sqlItems,
                     value: sqlselect,
-                    onChanged: (sql) => {setState(() => sqlselect = sql!)},
+                    onChanged: (sql) => {
+                      setState(() {
+                        sqlselect = sql!;
+                        initsql();
+                      })
+                    },
                   ),
                   const SizedBox(width: 20),
                   if (sqlstatus == true)
@@ -217,7 +285,7 @@ class MyHomePageState extends State<MyHomePage> {
                   if (btwselect != null)
                     Image.asset("images/right.png", width: 20, height: 20),
                   // const SizedBox(width: 20),
-                  // const Spacer(),
+                  const Spacer(),
                   const Text("RFT小数位:"),
                   Checkbox(
                     value: checkboxSelected, activeColor: Colors.red, //选中时的颜色
