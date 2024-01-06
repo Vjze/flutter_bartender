@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bartender/src/rust/api/simple.dart';
 import 'package:flutter_bartender/src/rust/frb_generated.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
 
 Future<void> main() async {
   await RustLib.init();
@@ -13,11 +14,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Print',
+      title: '条码打印',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Print'),
+      home: const MyHomePage(title: '条码打印'),
     );
   }
 }
@@ -66,19 +67,36 @@ class MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void prints() async {
+  void doBarcodeScan() async {
+    var options = const ScanOptions(
+        //是否自动打开闪光灯
+        autoEnableFlash: true,
+        strings: {'cancel': '取消', 'flash_on': '打开闪光灯', 'flash_off': '关闭闪光灯'});
+    var cresult = await BarcodeScanner.scan(options: options);
+    setState(() {
+      input.text = cresult.rawContent;
+    });
+    // print(cresult.type);
+    // print(cresult.rawContent);
+    // print(cresult.format);
+    // print(cresult.formatNote);
+  }
+
+  void doprint() async {
     if (checkboxSelected == true) {
       setState(() {
         rft = 0;
+        text = '打印中...';
       });
     } else {
       setState(() {
         rft = 2;
+        text = '打印中...';
       });
     }
-    final result = await print(
+    final result = await doPrint(
         sn: input.text,
-        sql: sqlselect!,
+        sql: sqlselect,
         printer: printerselect!,
         btw: btwselect!,
         float: 0,
@@ -100,6 +118,7 @@ class MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        leading: Image.asset("images/icons.png", width: 20, height: 20),
       ),
       body: Center(
         child: Padding(
@@ -112,7 +131,7 @@ class MyHomePageState extends State<MyHomePage> {
                   child: TextField(
                     autofocus: true,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.camera),
+                      // prefixIcon: const Icon(Icons.camera),
                       hintText: "扫码进行打印...",
                       suffixIcon: IconButton(
                         onPressed: input.clear,
@@ -121,16 +140,25 @@ class MyHomePageState extends State<MyHomePage> {
                     ),
                     controller: input,
                     onSubmitted: (value) {
-                      prints();
+                      doprint();
                     },
                   ),
                 ),
                 const SizedBox(width: 20),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.print),
-                  label: const Text("打印"),
+                IconButton(
+                  icon: const Icon(Icons.camera),
+                  // label: const Text("扫码"),
                   onPressed: () {
-                    prints();
+                    doBarcodeScan();
+                  },
+                ),
+                const SizedBox(width: 20),
+                FilledButton(
+                  // icon: const Icon(Icons.print),
+                  // label: const Text("打印"),
+                  child: const Text('打印'),
+                  onPressed: () {
+                    doprint();
                   },
                 )
               ]),
@@ -189,7 +217,7 @@ class MyHomePageState extends State<MyHomePage> {
                   if (btwselect != null)
                     Image.asset("images/right.png", width: 20, height: 20),
                   // const SizedBox(width: 20),
-                  const Spacer(),
+                  // const Spacer(),
                   const Text("RFT小数位:"),
                   Checkbox(
                     value: checkboxSelected, activeColor: Colors.red, //选中时的颜色

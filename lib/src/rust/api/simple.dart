@@ -21,14 +21,15 @@ Future<List<String>> loadPrinters({dynamic hint}) =>
 Future<List<String>> loadBtws({required String id, dynamic hint}) =>
     RustLib.instance.api.loadBtws(id: id, hint: hint);
 
-Future<ClientCompatTcpStream> client({required String sql, dynamic hint}) =>
+Future<TiberiusClientTokioUtilCompatCompatTokioNetTcpStream> client(
+        {required String sql, dynamic hint}) =>
     RustLib.instance.api.client(sql: sql, hint: hint);
 
 Future<List<DataInfo>> runQuery(
         {required String sn, required String sql, dynamic hint}) =>
     RustLib.instance.api.runQuery(sn: sn, sql: sql, hint: hint);
 
-Future<String> print(
+Future<String> doPrint(
         {required String sn,
         required String sql,
         required String id,
@@ -36,7 +37,7 @@ Future<String> print(
         required String printer,
         required int float,
         dynamic hint}) =>
-    RustLib.instance.api.print(
+    RustLib.instance.api.doPrint(
         sn: sn,
         sql: sql,
         id: id,
@@ -49,22 +50,24 @@ Future<String> updata(
         {required List<DataInfo> list, required String sql, dynamic hint}) =>
     RustLib.instance.api.updata(list: list, sql: sql, hint: hint);
 
-// Rust type: flutter_rust_bridge::RustOpaque<std::sync::RwLock<Client < Compat < TcpStream > >>>
+// Rust type: flutter_rust_bridge::RustOpaque<std::sync::RwLock<tiberius :: Client < tokio_util :: compat :: Compat < tokio :: net :: TcpStream > >>>
 @sealed
-class ClientCompatTcpStream extends RustOpaque {
-  ClientCompatTcpStream.dcoDecode(List<dynamic> wire)
+class TiberiusClientTokioUtilCompatCompatTokioNetTcpStream extends RustOpaque {
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream.dcoDecode(
+      List<dynamic> wire)
       : super.dcoDecode(wire, _kStaticData);
 
-  ClientCompatTcpStream.sseDecode(int ptr, int externalSizeOnNative)
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream.sseDecode(
+      int ptr, int externalSizeOnNative)
       : super.sseDecode(ptr, externalSizeOnNative, _kStaticData);
 
   static final _kStaticData = RustArcStaticData(
-    rustArcIncrementStrongCount: RustLib
-        .instance.api.rust_arc_increment_strong_count_ClientCompatTcpStream,
-    rustArcDecrementStrongCount: RustLib
-        .instance.api.rust_arc_decrement_strong_count_ClientCompatTcpStream,
-    rustArcDecrementStrongCountPtr: RustLib
-        .instance.api.rust_arc_decrement_strong_count_ClientCompatTcpStreamPtr,
+    rustArcIncrementStrongCount: RustLib.instance.api
+        .rust_arc_increment_strong_count_TiberiusClientTokioUtilCompatCompatTokioNetTcpStream,
+    rustArcDecrementStrongCount: RustLib.instance.api
+        .rust_arc_decrement_strong_count_TiberiusClientTokioUtilCompatCompatTokioNetTcpStream,
+    rustArcDecrementStrongCountPtr: RustLib.instance.api
+        .rust_arc_decrement_strong_count_TiberiusClientTokioUtilCompatCompatTokioNetTcpStreamPtr,
   );
 }
 

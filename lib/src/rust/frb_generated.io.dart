@@ -19,17 +19,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   });
 
   CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_ClientCompatTcpStreamPtr => wire
-          ._rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStreamPtr;
+      get rust_arc_decrement_strong_count_TiberiusClientTokioUtilCompatCompatTokioNetTcpStreamPtr =>
+          wire._rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStreamPtr;
 
   @protected
-  ClientCompatTcpStream
-      dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      dco_decode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           dynamic raw);
 
   @protected
-  ClientCompatTcpStream
-      dco_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(dynamic raw);
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      dco_decode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          dynamic raw);
 
   @protected
   String dco_decode_String(dynamic raw);
@@ -68,13 +69,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_usize(dynamic raw);
 
   @protected
-  ClientCompatTcpStream
-      sse_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      sse_decode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           SseDeserializer deserializer);
 
   @protected
-  ClientCompatTcpStream
-      sse_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      sse_decode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           SseDeserializer deserializer);
 
   @protected
@@ -171,12 +172,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlatformPointer
-      cst_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-          ClientCompatTcpStream raw);
+      cst_encode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream raw);
 
   @protected
-  PlatformPointer cst_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-      ClientCompatTcpStream raw);
+  PlatformPointer
+      cst_encode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream raw);
 
   @protected
   bool cst_encode_bool(bool raw);
@@ -197,12 +199,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int cst_encode_usize(int raw);
 
   @protected
-  void sse_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-      ClientCompatTcpStream self, SseSerializer serializer);
+  void
+      sse_encode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream self,
+          SseSerializer serializer);
 
   @protected
-  void sse_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-      ClientCompatTcpStream self, SseSerializer serializer);
+  void
+      sse_encode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream self,
+          SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
@@ -308,6 +314,46 @@ class RustLibWire implements BaseWire {
   late final _wire_client = _wire_clientPtr.asFunction<
       void Function(int, ffi.Pointer<wire_cst_list_prim_u_8_strict>)>();
 
+  void wire_do_print(
+    int port_,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> sn,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> sql,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> id,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> btw,
+    ffi.Pointer<wire_cst_list_prim_u_8_strict> printer,
+    int float_,
+  ) {
+    return _wire_do_print(
+      port_,
+      sn,
+      sql,
+      id,
+      btw,
+      printer,
+      float_,
+    );
+  }
+
+  late final _wire_do_printPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+              ffi.Uint32)>>('frbgen_flutter_bartender_wire_do_print');
+  late final _wire_do_print = _wire_do_printPtr.asFunction<
+      void Function(
+          int,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
+          int)>();
+
   void wire_get_libraries(
     int port_,
   ) {
@@ -386,46 +432,6 @@ class RustLibWire implements BaseWire {
   late final _wire_load_printers =
       _wire_load_printersPtr.asFunction<void Function(int)>();
 
-  void wire_print(
-    int port_,
-    ffi.Pointer<wire_cst_list_prim_u_8_strict> sn,
-    ffi.Pointer<wire_cst_list_prim_u_8_strict> sql,
-    ffi.Pointer<wire_cst_list_prim_u_8_strict> id,
-    ffi.Pointer<wire_cst_list_prim_u_8_strict> btw,
-    ffi.Pointer<wire_cst_list_prim_u_8_strict> printer,
-    int float_,
-  ) {
-    return _wire_print(
-      port_,
-      sn,
-      sql,
-      id,
-      btw,
-      printer,
-      float_,
-    );
-  }
-
-  late final _wire_printPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Int64,
-              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
-              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
-              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
-              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
-              ffi.Pointer<wire_cst_list_prim_u_8_strict>,
-              ffi.Uint32)>>('frbgen_flutter_bartender_wire_print');
-  late final _wire_print = _wire_printPtr.asFunction<
-      void Function(
-          int,
-          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
-          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
-          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
-          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
-          ffi.Pointer<wire_cst_list_prim_u_8_strict>,
-          int)>();
-
   void wire_run_query(
     int port_,
     ffi.Pointer<wire_cst_list_prim_u_8_strict> sn,
@@ -489,35 +495,35 @@ class RustLibWire implements BaseWire {
           ffi.Pointer<wire_cst_list_prim_u_8_strict>)>();
 
   void
-      rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
     ffi.Pointer<ffi.Void> ptr,
   ) {
-    return _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+    return _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
       ptr,
     );
   }
 
-  late final _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStreamPtr =
+  late final _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStreamPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'frbgen_flutter_bartender_rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream');
-  late final _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream =
-      _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStreamPtr
+          'frbgen_flutter_bartender_rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream');
+  late final _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream =
+      _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStreamPtr
           .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
   void
-      rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
     ffi.Pointer<ffi.Void> ptr,
   ) {
-    return _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+    return _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
       ptr,
     );
   }
 
-  late final _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStreamPtr =
+  late final _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStreamPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'frbgen_flutter_bartender_rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream');
-  late final _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream =
-      _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStreamPtr
+          'frbgen_flutter_bartender_rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream');
+  late final _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream =
+      _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStreamPtr
           .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
   ffi.Pointer<wire_cst_list_String> cst_new_list_String(

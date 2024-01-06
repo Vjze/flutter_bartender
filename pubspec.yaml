@@ -38,6 +38,7 @@ dependencies:
   rust_builder:
     path: rust_builder
   flutter_rust_bridge: 2.0.0-dev.12
+  barcode_scan2: ^4.3.0
   # fluent_ui: 4.8.1
 
 dev_dependencies:

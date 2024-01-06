@@ -99,12 +99,18 @@ impl CstDecode<Vec<u8>> for Box<[u8]> {
         self.into_vec()
     }
 }
-impl CstDecode<flutter_rust_bridge::RustOpaque<std::sync::RwLock<Client<Compat<TcpStream>>>>>
-    for flutter_rust_bridge::for_generated::wasm_bindgen::JsValue
+impl
+    CstDecode<
+        flutter_rust_bridge::RustOpaque<
+            std::sync::RwLock<tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>>>,
+        >,
+    > for flutter_rust_bridge::for_generated::wasm_bindgen::JsValue
 {
     fn cst_decode(
         self,
-    ) -> flutter_rust_bridge::RustOpaque<std::sync::RwLock<Client<Compat<TcpStream>>>> {
+    ) -> flutter_rust_bridge::RustOpaque<
+        std::sync::RwLock<tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>>>,
+    > {
         unsafe { flutter_rust_bridge::for_generated::cst_decode_rust_opaque(self) }
     }
 }
@@ -169,6 +175,19 @@ pub fn wire_client(port_: flutter_rust_bridge::for_generated::MessagePort, sql: 
 }
 
 #[wasm_bindgen]
+pub fn wire_do_print(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    sn: String,
+    sql: String,
+    id: String,
+    btw: String,
+    printer: String,
+    float: u32,
+) {
+    wire_do_print_impl(port_, sn, sql, id, btw, printer, float)
+}
+
+#[wasm_bindgen]
 pub fn wire_get_libraries(port_: flutter_rust_bridge::for_generated::MessagePort) {
     wire_get_libraries_impl(port_)
 }
@@ -191,19 +210,6 @@ pub fn wire_load_btws(port_: flutter_rust_bridge::for_generated::MessagePort, id
 #[wasm_bindgen]
 pub fn wire_load_printers(port_: flutter_rust_bridge::for_generated::MessagePort) {
     wire_load_printers_impl(port_)
-}
-
-#[wasm_bindgen]
-pub fn wire_print(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    sn: String,
-    sql: String,
-    id: String,
-    btw: String,
-    printer: String,
-    float: u32,
-) {
-    wire_print_impl(port_, sn, sql, id, btw, printer, float)
 }
 
 #[wasm_bindgen]
@@ -230,23 +236,23 @@ pub fn wire_updata(
 }
 
 #[wasm_bindgen]
-pub fn rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+pub fn rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
     ptr: *const std::ffi::c_void,
 ) {
     unsafe {
         flutter_rust_bridge::for_generated::rust_arc_increment_strong_count::<
-            std::sync::RwLock<Client<Compat<TcpStream>>>,
+            std::sync::RwLock<tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>>>,
         >(ptr);
     }
 }
 
 #[wasm_bindgen]
-pub fn rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+pub fn rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
     ptr: *const std::ffi::c_void,
 ) {
     unsafe {
         flutter_rust_bridge::for_generated::rust_arc_decrement_strong_count::<
-            std::sync::RwLock<Client<Compat<TcpStream>>>,
+            std::sync::RwLock<tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>>>,
         >(ptr);
     }
 }

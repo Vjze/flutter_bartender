@@ -18,17 +18,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   });
 
   CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_ClientCompatTcpStreamPtr => wire
-          .rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream;
+      get rust_arc_decrement_strong_count_TiberiusClientTokioUtilCompatCompatTokioNetTcpStreamPtr =>
+          wire.rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream;
 
   @protected
-  ClientCompatTcpStream
-      dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      dco_decode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           dynamic raw);
 
   @protected
-  ClientCompatTcpStream
-      dco_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(dynamic raw);
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      dco_decode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          dynamic raw);
 
   @protected
   String dco_decode_String(dynamic raw);
@@ -67,13 +68,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int dco_decode_usize(dynamic raw);
 
   @protected
-  ClientCompatTcpStream
-      sse_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      sse_decode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           SseDeserializer deserializer);
 
   @protected
-  ClientCompatTcpStream
-      sse_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      sse_decode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           SseDeserializer deserializer);
 
   @protected
@@ -160,12 +161,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlatformPointer
-      cst_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-          ClientCompatTcpStream raw);
+      cst_encode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream raw);
 
   @protected
-  PlatformPointer cst_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-      ClientCompatTcpStream raw);
+  PlatformPointer
+      cst_encode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream raw);
 
   @protected
   bool cst_encode_bool(bool raw);
@@ -186,12 +188,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int cst_encode_usize(int raw);
 
   @protected
-  void sse_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-      ClientCompatTcpStream self, SseSerializer serializer);
+  void
+      sse_encode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream self,
+          SseSerializer serializer);
 
   @protected
-  void sse_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-      ClientCompatTcpStream self, SseSerializer serializer);
+  void
+      sse_encode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream self,
+          SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
@@ -244,6 +250,10 @@ class RustLibWire extends BaseWire {
   void wire_client(NativePortType port_, String sql) =>
       wasmModule.wire_client(port_, sql);
 
+  void wire_do_print(NativePortType port_, String sn, String sql, String id,
+          String btw, String printer, int float) =>
+      wasmModule.wire_do_print(port_, sn, sql, id, btw, printer, float);
+
   void wire_get_libraries(NativePortType port_) =>
       wasmModule.wire_get_libraries(port_);
 
@@ -258,10 +268,6 @@ class RustLibWire extends BaseWire {
   void wire_load_printers(NativePortType port_) =>
       wasmModule.wire_load_printers(port_);
 
-  void wire_print(NativePortType port_, String sn, String sql, String id,
-          String btw, String printer, int float) =>
-      wasmModule.wire_print(port_, sn, sql, id, btw, printer, float);
-
   void wire_run_query(NativePortType port_, String sn, String sql) =>
       wasmModule.wire_run_query(port_, sn, sql);
 
@@ -271,16 +277,16 @@ class RustLibWire extends BaseWire {
   void wire_updata(NativePortType port_, List<dynamic> list, String sql) =>
       wasmModule.wire_updata(port_, list, sql);
 
-  void rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+  void rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           dynamic ptr) =>
       wasmModule
-          .rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          .rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
               ptr);
 
-  void rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+  void rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           dynamic ptr) =>
       wasmModule
-          .rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+          .rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
               ptr);
 }
 
@@ -301,6 +307,9 @@ class RustLibWasmModule implements WasmModule {
 
   external void wire_client(NativePortType port_, String sql);
 
+  external void wire_do_print(NativePortType port_, String sn, String sql,
+      String id, String btw, String printer, int float);
+
   external void wire_get_libraries(NativePortType port_);
 
   external void wire_init_all(NativePortType port_, String sql);
@@ -311,9 +320,6 @@ class RustLibWasmModule implements WasmModule {
 
   external void wire_load_printers(NativePortType port_);
 
-  external void wire_print(NativePortType port_, String sn, String sql,
-      String id, String btw, String printer, int float);
-
   external void wire_run_query(NativePortType port_, String sn, String sql);
 
   external void wire_sql_init(NativePortType port_, String sql);
@@ -322,10 +328,10 @@ class RustLibWasmModule implements WasmModule {
       NativePortType port_, List<dynamic> list, String sql);
 
   external void
-      rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           dynamic ptr);
 
   external void
-      rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+      rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           dynamic ptr);
 }

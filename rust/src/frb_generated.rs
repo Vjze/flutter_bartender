@@ -60,6 +60,49 @@ fn wire_client_impl(
         },
     )
 }
+fn wire_do_print_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    sn: impl CstDecode<String>,
+    sql: impl CstDecode<String>,
+    id: impl CstDecode<String>,
+    btw: impl CstDecode<String>,
+    printer: impl CstDecode<String>,
+    float: impl CstDecode<u32>,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "do_print",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_sn = sn.cst_decode();
+            let api_sql = sql.cst_decode();
+            let api_id = id.cst_decode();
+            let api_btw = btw.cst_decode();
+            let api_printer = printer.cst_decode();
+            let api_float = float.cst_decode();
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(
+                            crate::api::simple::do_print(
+                                api_sn,
+                                api_sql,
+                                api_id,
+                                api_btw,
+                                api_printer,
+                                api_float,
+                            )
+                            .await,
+                        )
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire_get_libraries_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
@@ -153,49 +196,6 @@ fn wire_load_printers_impl(port_: flutter_rust_bridge::for_generated::MessagePor
                 transform_result_dco(
                     (move || async move {
                         Result::<_, ()>::Ok(crate::api::simple::load_printers().await)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
-fn wire_print_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    sn: impl CstDecode<String>,
-    sql: impl CstDecode<String>,
-    id: impl CstDecode<String>,
-    btw: impl CstDecode<String>,
-    printer: impl CstDecode<String>,
-    float: impl CstDecode<u32>,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "print",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let api_sn = sn.cst_decode();
-            let api_sql = sql.cst_decode();
-            let api_id = id.cst_decode();
-            let api_btw = btw.cst_decode();
-            let api_printer = printer.cst_decode();
-            let api_float = float.cst_decode();
-            move |context| async move {
-                transform_result_dco(
-                    (move || async move {
-                        Result::<_, ()>::Ok(
-                            crate::api::simple::print(
-                                api_sn,
-                                api_sql,
-                                api_id,
-                                api_btw,
-                                api_printer,
-                                api_float,
-                            )
-                            .await,
-                        )
                     })()
                     .await,
                 )
@@ -304,7 +304,11 @@ impl CstDecode<usize> for usize {
         self
     }
 }
-impl SseDecode for flutter_rust_bridge::RustOpaque<std::sync::RwLock<Client<Compat<TcpStream>>>> {
+impl SseDecode
+    for flutter_rust_bridge::RustOpaque<
+        std::sync::RwLock<tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>>>,
+    >
+{
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <usize>::sse_decode(deserializer);
         return unsafe { flutter_rust_bridge::for_generated::sse_decode_rust_opaque(inner) };
@@ -474,7 +478,11 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::InitData>
     }
 }
 
-impl SseEncode for flutter_rust_bridge::RustOpaque<std::sync::RwLock<Client<Compat<TcpStream>>>> {
+impl SseEncode
+    for flutter_rust_bridge::RustOpaque<
+        std::sync::RwLock<tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>>>,
+    >
+{
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         let (ptr, size) = self.sse_encode_raw();
         <usize>::sse_encode(ptr, serializer);
@@ -586,8 +594,5 @@ pub use io::*;
 #[cfg(target_family = "wasm")]
 #[path = "frb_generated.web.rs"]
 mod web;
-use tiberius::Client;
-use tokio::net::TcpStream;
-use tokio_util::compat::Compat;
 #[cfg(target_family = "wasm")]
 pub use web::*;

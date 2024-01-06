@@ -1,10 +1,8 @@
 use chrono::Local;
 use serde_json::json;
 // use super::init::{InitData, get_libraries, load_btws, load_printers};
-use tiberius::{AuthMethod, Config, Client, numeric::Numeric};
-use tokio::net::TcpStream;
-use tokio_util::compat::{TokioAsyncWriteCompatExt, Compat};
-
+use tiberius::{AuthMethod, Config,  numeric::Numeric};
+use flutter_rust_bridge::spawn;
 pub async fn init_all(sql: String) -> InitData {
     // sleep(Duration::from_millis(1500)).await;
     let first = get_libraries().await;
@@ -36,11 +34,11 @@ pub async fn sql_init(sql: String) -> bool {
     // config.authentication(AuthMethod::sql_server("cytest", "cytest"));
     config.authentication(AuthMethod::sql_server("hztest", "hztest"));
     config.trust_cert();
-    let tcp = TcpStream::connect(config.get_addr()).await;
+    let tcp = tokio::net::TcpStream::connect(config.get_addr()).await;
     match tcp {
         Ok(tcp) => {
             tcp.set_nodelay(true).unwrap();
-            let client = tiberius::Client::connect(config, tcp.compat_write()).await;
+            let client = tiberius::Client::connect(config, tokio_util::compat::TokioAsyncWriteCompatExt::compat_write(tcp)).await;
             match client {
                 Ok(_) => true,
                 Err(_e) => false,
@@ -50,7 +48,7 @@ pub async fn sql_init(sql: String) -> bool {
     }
 }
 pub async fn get_libraries() -> String {
-    let url = "http://localhost/BarTender/api/v1/libraries";
+    let url = "http://192.168.2.186/BarTender/api/v1/libraries";
     let res = ureq::get(&url).call().unwrap();
     let value = res.into_json::<serde_json::Value>().unwrap();
     let ids = &value.get(1).unwrap()["id"];
@@ -68,7 +66,7 @@ pub async fn get_libraries() -> String {
     id.to_string()
 }
 pub async fn load_printers() -> Vec<String> {
-    let url = "http://localhost/BarTender/api/v1/printers";
+    let url = "http://192.168.2.186/BarTender/api/v1/printers";
     let res = ureq::get(url).call().unwrap();
     let value = res.into_json::<serde_json::Value>().unwrap();
     let x = value.get("serverPrinters").unwrap().as_array().unwrap();
@@ -90,7 +88,7 @@ pub async fn load_printers() -> Vec<String> {
     list
 }
 pub async fn load_btws(id: String) -> Vec<String> {
-    let url = format!("http://localhost/BarTender/api/v1/libraries/{}", id);
+    let url = format!("http://192.168.2.186/BarTender/api/v1/libraries/{}", id);
     let res = ureq::get(&url).call().unwrap();
     let value = res.into_json::<serde_json::Value>().unwrap();
 
@@ -112,7 +110,7 @@ pub async fn load_btws(id: String) -> Vec<String> {
     }
     list
 }
-pub async fn client(sql: String) -> Client<Compat<TcpStream>> {
+pub async fn client(sql: String) -> tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>> {
     let mut config = Config::new();
     config.host(sql);
     config.port(1433);
@@ -121,9 +119,9 @@ pub async fn client(sql: String) -> Client<Compat<TcpStream>> {
     config.authentication(AuthMethod::sql_server("hztest", "hztest"));
     config.trust_cert();
     // let tcp = TcpStream::connect(config.get_addr()).await.unwrap();
-    let tcp = TcpStream::connect(config.get_addr()).await.unwrap();
+    let tcp = tokio::net::TcpStream::connect(config.get_addr()).await.unwrap();
     tcp.set_nodelay(true).unwrap();
-    let client = tiberius::Client::connect(config, tcp.compat_write()).await.unwrap();
+    let client = tiberius::Client::connect(config, tokio_util::compat::TokioAsyncWriteCompatExt::compat_write(tcp)).await.unwrap();
     client
 }
 pub async fn run_query(sn: String, sql: String) -> Vec<DataInfo> {
@@ -194,7 +192,7 @@ async fn examine(sn: String, sql: String) -> bool {
         }
     }
 }
-pub async fn print(
+pub async fn do_print(
     sn:String,
     sql:String,
     id: String,
@@ -249,8 +247,8 @@ pub async fn print(
         });
     println!("data = {}", data);
 
-    let worker_thread = tokio::spawn(async move {
-        let url = "http://localhost/BarTender/api/v1/print";
+    let worker_thread = spawn(async move {
+        let url = "http://192.168.2.186/BarTender/api/v1/print";
         let res = ureq::post(url).send_json(data).unwrap();
         let value = res.status_text();
         let res = if value == "OK"{

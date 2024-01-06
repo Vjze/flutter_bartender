@@ -11,12 +11,18 @@ use flutter_rust_bridge::{Handler, IntoIntoDart};
 
 // Section: dart2rust
 
-impl CstDecode<flutter_rust_bridge::RustOpaque<std::sync::RwLock<Client<Compat<TcpStream>>>>>
-    for *const std::ffi::c_void
+impl
+    CstDecode<
+        flutter_rust_bridge::RustOpaque<
+            std::sync::RwLock<tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>>>,
+        >,
+    > for *const std::ffi::c_void
 {
     fn cst_decode(
         self,
-    ) -> flutter_rust_bridge::RustOpaque<std::sync::RwLock<Client<Compat<TcpStream>>>> {
+    ) -> flutter_rust_bridge::RustOpaque<
+        std::sync::RwLock<tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>>>,
+    > {
         unsafe { flutter_rust_bridge::for_generated::cst_decode_rust_opaque(self) }
     }
 }
@@ -150,6 +156,19 @@ pub extern "C" fn frbgen_flutter_bartender_wire_client(
 }
 
 #[no_mangle]
+pub extern "C" fn frbgen_flutter_bartender_wire_do_print(
+    port_: i64,
+    sn: *mut wire_cst_list_prim_u_8_strict,
+    sql: *mut wire_cst_list_prim_u_8_strict,
+    id: *mut wire_cst_list_prim_u_8_strict,
+    btw: *mut wire_cst_list_prim_u_8_strict,
+    printer: *mut wire_cst_list_prim_u_8_strict,
+    float: u32,
+) {
+    wire_do_print_impl(port_, sn, sql, id, btw, printer, float)
+}
+
+#[no_mangle]
 pub extern "C" fn frbgen_flutter_bartender_wire_get_libraries(port_: i64) {
     wire_get_libraries_impl(port_)
 }
@@ -181,19 +200,6 @@ pub extern "C" fn frbgen_flutter_bartender_wire_load_printers(port_: i64) {
 }
 
 #[no_mangle]
-pub extern "C" fn frbgen_flutter_bartender_wire_print(
-    port_: i64,
-    sn: *mut wire_cst_list_prim_u_8_strict,
-    sql: *mut wire_cst_list_prim_u_8_strict,
-    id: *mut wire_cst_list_prim_u_8_strict,
-    btw: *mut wire_cst_list_prim_u_8_strict,
-    printer: *mut wire_cst_list_prim_u_8_strict,
-    float: u32,
-) {
-    wire_print_impl(port_, sn, sql, id, btw, printer, float)
-}
-
-#[no_mangle]
 pub extern "C" fn frbgen_flutter_bartender_wire_run_query(
     port_: i64,
     sn: *mut wire_cst_list_prim_u_8_strict,
@@ -220,23 +226,23 @@ pub extern "C" fn frbgen_flutter_bartender_wire_updata(
 }
 
 #[no_mangle]
-pub extern "C" fn frbgen_flutter_bartender_rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+pub extern "C" fn frbgen_flutter_bartender_rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
     ptr: *const std::ffi::c_void,
 ) {
     unsafe {
         flutter_rust_bridge::for_generated::rust_arc_increment_strong_count::<
-            std::sync::RwLock<Client<Compat<TcpStream>>>,
+            std::sync::RwLock<tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>>>,
         >(ptr);
     }
 }
 
 #[no_mangle]
-pub extern "C" fn frbgen_flutter_bartender_rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+pub extern "C" fn frbgen_flutter_bartender_rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
     ptr: *const std::ffi::c_void,
 ) {
     unsafe {
         flutter_rust_bridge::for_generated::rust_arc_decrement_strong_count::<
-            std::sync::RwLock<Client<Compat<TcpStream>>>,
+            std::sync::RwLock<tiberius::Client<tokio_util::compat::Compat<tokio::net::TcpStream>>>,
         >(ptr);
     }
 }

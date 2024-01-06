@@ -61,7 +61,17 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  Future<ClientCompatTcpStream> client({required String sql, dynamic hint});
+  Future<TiberiusClientTokioUtilCompatCompatTokioNetTcpStream> client(
+      {required String sql, dynamic hint});
+
+  Future<String> doPrint(
+      {required String sn,
+      required String sql,
+      required String id,
+      required String btw,
+      required String printer,
+      required int float,
+      dynamic hint});
 
   Future<String> getLibraries({dynamic hint});
 
@@ -73,15 +83,6 @@ abstract class RustLibApi extends BaseApi {
 
   Future<List<String>> loadPrinters({dynamic hint});
 
-  Future<String> print(
-      {required String sn,
-      required String sql,
-      required String id,
-      required String btw,
-      required String printer,
-      required int float,
-      dynamic hint});
-
   Future<List<DataInfo>> runQuery(
       {required String sn, required String sql, dynamic hint});
 
@@ -91,13 +92,13 @@ abstract class RustLibApi extends BaseApi {
       {required List<DataInfo> list, required String sql, dynamic hint});
 
   RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_ClientCompatTcpStream;
+      get rust_arc_increment_strong_count_TiberiusClientTokioUtilCompatCompatTokioNetTcpStream;
 
   RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_ClientCompatTcpStream;
+      get rust_arc_decrement_strong_count_TiberiusClientTokioUtilCompatCompatTokioNetTcpStream;
 
   CrossPlatformFinalizerArg
-      get rust_arc_decrement_strong_count_ClientCompatTcpStreamPtr;
+      get rust_arc_decrement_strong_count_TiberiusClientTokioUtilCompatCompatTokioNetTcpStreamPtr;
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -109,7 +110,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  Future<ClientCompatTcpStream> client({required String sql, dynamic hint}) {
+  Future<TiberiusClientTokioUtilCompatCompatTokioNetTcpStream> client(
+      {required String sql, dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         var arg0 = cst_encode_String(sql);
@@ -117,7 +119,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       },
       codec: DcoCodec(
         decodeSuccessData:
-            dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream,
+            dco_decode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream,
         decodeErrorData: null,
       ),
       constMeta: kClientConstMeta,
@@ -130,6 +132,41 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kClientConstMeta => const TaskConstMeta(
         debugName: "client",
         argNames: ["sql"],
+      );
+
+  @override
+  Future<String> doPrint(
+      {required String sn,
+      required String sql,
+      required String id,
+      required String btw,
+      required String printer,
+      required int float,
+      dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        var arg0 = cst_encode_String(sn);
+        var arg1 = cst_encode_String(sql);
+        var arg2 = cst_encode_String(id);
+        var arg3 = cst_encode_String(btw);
+        var arg4 = cst_encode_String(printer);
+        var arg5 = cst_encode_u_32(float);
+        return wire.wire_do_print(port_, arg0, arg1, arg2, arg3, arg4, arg5);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kDoPrintConstMeta,
+      argValues: [sn, sql, id, btw, printer, float],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kDoPrintConstMeta => const TaskConstMeta(
+        debugName: "do_print",
+        argNames: ["sn", "sql", "id", "btw", "printer", "float"],
       );
 
   @override
@@ -245,41 +282,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<String> print(
-      {required String sn,
-      required String sql,
-      required String id,
-      required String btw,
-      required String printer,
-      required int float,
-      dynamic hint}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        var arg0 = cst_encode_String(sn);
-        var arg1 = cst_encode_String(sql);
-        var arg2 = cst_encode_String(id);
-        var arg3 = cst_encode_String(btw);
-        var arg4 = cst_encode_String(printer);
-        var arg5 = cst_encode_u_32(float);
-        return wire.wire_print(port_, arg0, arg1, arg2, arg3, arg4, arg5);
-      },
-      codec: DcoCodec(
-        decodeSuccessData: dco_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta: kPrintConstMeta,
-      argValues: [sn, sql, id, btw, printer, float],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kPrintConstMeta => const TaskConstMeta(
-        debugName: "print",
-        argNames: ["sn", "sql", "id", "btw", "printer", "float"],
-      );
-
-  @override
   Future<List<DataInfo>> runQuery(
       {required String sn, required String sql, dynamic hint}) {
     return handler.executeNormal(NormalTask(
@@ -353,24 +355,27 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   RustArcIncrementStrongCountFnType
-      get rust_arc_increment_strong_count_ClientCompatTcpStream => wire
-          .rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream;
+      get rust_arc_increment_strong_count_TiberiusClientTokioUtilCompatCompatTokioNetTcpStream =>
+          wire.rust_arc_increment_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream;
 
   RustArcDecrementStrongCountFnType
-      get rust_arc_decrement_strong_count_ClientCompatTcpStream => wire
-          .rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockClientCompatTcpStream;
+      get rust_arc_decrement_strong_count_TiberiusClientTokioUtilCompatCompatTokioNetTcpStream =>
+          wire.rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream;
 
   @protected
-  ClientCompatTcpStream
-      dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      dco_decode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           dynamic raw) {
-    return ClientCompatTcpStream.dcoDecode(raw as List<dynamic>);
+    return TiberiusClientTokioUtilCompatCompatTokioNetTcpStream.dcoDecode(
+        raw as List<dynamic>);
   }
 
   @protected
-  ClientCompatTcpStream
-      dco_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(dynamic raw) {
-    return ClientCompatTcpStream.dcoDecode(raw as List<dynamic>);
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      dco_decode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          dynamic raw) {
+    return TiberiusClientTokioUtilCompatCompatTokioNetTcpStream.dcoDecode(
+        raw as List<dynamic>);
   }
 
   @protected
@@ -456,18 +461,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  ClientCompatTcpStream
-      sse_decode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      sse_decode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           SseDeserializer deserializer) {
-    return ClientCompatTcpStream.sseDecode(
+    return TiberiusClientTokioUtilCompatCompatTokioNetTcpStream.sseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
   @protected
-  ClientCompatTcpStream
-      sse_decode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
+  TiberiusClientTokioUtilCompatCompatTokioNetTcpStream
+      sse_decode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
           SseDeserializer deserializer) {
-    return ClientCompatTcpStream.sseDecode(
+    return TiberiusClientTokioUtilCompatCompatTokioNetTcpStream.sseDecode(
         sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
   }
 
@@ -571,15 +576,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   PlatformPointer
-      cst_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-          ClientCompatTcpStream raw) {
+      cst_encode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream raw) {
     // ignore: invalid_use_of_internal_member
     return raw.cstEncode(move: true);
   }
 
   @protected
-  PlatformPointer cst_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-      ClientCompatTcpStream raw) {
+  PlatformPointer
+      cst_encode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream raw) {
     // ignore: invalid_use_of_internal_member
     return raw.cstEncode();
   }
@@ -615,14 +621,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_Auto_Owned_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-      ClientCompatTcpStream self, SseSerializer serializer) {
+  void
+      sse_encode_Auto_Owned_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream self,
+          SseSerializer serializer) {
     sse_encode_usize(self.sseEncode(move: true), serializer);
   }
 
   @protected
-  void sse_encode_RustOpaque_stdsyncRwLockClientCompatTcpStream(
-      ClientCompatTcpStream self, SseSerializer serializer) {
+  void
+      sse_encode_RustOpaque_stdsyncRwLocktiberiusClienttokio_utilcompatCompattokionetTcpStream(
+          TiberiusClientTokioUtilCompatCompatTokioNetTcpStream self,
+          SseSerializer serializer) {
     sse_encode_usize(self.sseEncode(move: null), serializer);
   }
 
