@@ -410,9 +410,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge"
-version = "2.0.0-dev.13"
+version = "2.0.0-dev.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f2167f31b6ae1f0549a8a83261988f38baf5012522c3819d58af5965d26b63a"
+checksum = "13cbf4fc05866c90cf6b39d218fc1e299b1cb6fdf448128dcb8c598c771c5eec"
 dependencies = [
  "allo-isolate",
  "android_logger",
@@ -443,9 +443,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge_macros"
-version = "2.0.0-dev.13"
+version = "2.0.0-dev.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "76cc566fee85c846ddd29b75f6866cff4c59a23662e495648c808fb898210909"
+checksum = "e333667a4cf75146ff0800ea3b0f93ab5e870d927af805c61c278fd7e57a8c66"
 
 [[package]]
 name = "foreign-types"
@@ -776,6 +776,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ff011a302c396a5197692431fc1948019154afc178baf7d8e37367442a4601cf"
 
 [[package]]
+name = "openssl-src"
+version = "300.1.6+3.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "439fac53e092cd7442a3660c85dde4643ab3b5bd39040912388dcdabf6b88085"
+dependencies = [
+ "cc",
+]
+
+[[package]]
 name = "openssl-sys"
 version = "0.9.98"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -783,6 +792,7 @@ checksum = "c1665caf8ab2dc9aef43d1c0023bd904633a6a05cb30b0ad59bec2ae986e57a7"
 dependencies = [
  "cc",
  "libc",
+ "openssl-src",
  "pkg-config",
  "vcpkg",
 ]
@@ -927,6 +937,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "flutter_rust_bridge",
+ "openssl",
  "serde",
  "serde_json",
  "tiberius",

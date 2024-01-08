@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bartender/src/rust/api/simple.dart';
@@ -178,6 +180,9 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -185,128 +190,258 @@ class MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              Row(children: [
-                Expanded(
-                  flex: 4,
-                  child: TextField(
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      // prefixIcon: const Icon(Icons.camera),
-                      hintText: "扫码进行打印...",
-                      suffixIcon: IconButton(
-                        onPressed: input.clear,
-                        icon: const Icon(Icons.clear),
+            padding: const EdgeInsets.all(12.0),
+            child: width > 500
+                ? Column(
+                    children: [
+                      Row(children: [
+                        Expanded(
+                          flex: 4,
+                          child: TextField(
+                            autofocus: true,
+                            decoration: InputDecoration(
+                              // prefixIcon: const Icon(Icons.camera),
+                              hintText: "扫码进行打印...",
+                              suffixIcon: IconButton(
+                                onPressed: input.clear,
+                                icon: const Icon(Icons.clear),
+                              ),
+                            ),
+                            controller: input,
+                            onSubmitted: (value) {
+                              doprint();
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        const Text("RFT小数位:"),
+                        Checkbox(
+                          value: checkboxSelected,
+                          activeColor: Colors.red, //选中时的颜色
+                          onChanged: (value) {
+                            setState(() {
+                              checkboxSelected = value!;
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 20),
+                        ElevatedButton.icon(
+                          icon: const Icon(Icons.print),
+                          label: const Text("打印"),
+                          onPressed: () {
+                            doprint();
+                          },
+                        )
+                      ]),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          DropdownButton(
+                            hint: const Text('192.168.2.189'),
+                            items: sqlItems,
+                            value: sqlselect,
+                            onChanged: (sql) => {
+                              setState(() {
+                                sqlselect = sql!;
+                                initsql();
+                              })
+                            },
+                          ),
+                          const SizedBox(width: 20),
+                          if (sqlstatus == true)
+                            Image.asset("images/right.png",
+                                width: 20, height: 20),
+                          if (sqlstatus == false)
+                            Image.asset("images/wrongs.png",
+                                width: 20, height: 20),
+                          const Spacer(),
+                          DropdownButton(
+                            hint: const Text('请选择打印机'),
+                            items: printerItems
+                                .map((e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)))
+                                .toList(),
+                            value: printerselect,
+                            onChanged: (printer) => {
+                              setState(() {
+                                printerselect = printer!;
+                              })
+                            },
+                          ),
+                          const SizedBox(width: 20),
+                          if (printerItems.isEmpty)
+                            Image.asset("images/wrongs.png",
+                                width: 20, height: 20),
+                          if (printerselect == null && printerItems.isNotEmpty)
+                            Image.asset("images/wait.png",
+                                width: 20, height: 20),
+                          if (printerselect != null)
+                            Image.asset("images/right.png",
+                                width: 20, height: 20),
+                          const Spacer(),
+                          DropdownButton(
+                            hint: const Text('请选择模板'),
+                            items: btwItems
+                                .map((e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)))
+                                .toList(),
+                            value: btwselect,
+                            onChanged: (btw) =>
+                                {setState(() => btwselect = btw!)},
+                          ),
+                          const SizedBox(width: 20),
+                          if (btwItems.isEmpty)
+                            Image.asset("images/wrongs.png",
+                                width: 20, height: 20),
+                          if (btwselect == null && btwItems.isNotEmpty)
+                            Image.asset("images/wait.png",
+                                width: 20, height: 20),
+                          if (btwselect != null)
+                            Image.asset("images/right.png",
+                                width: 20, height: 20),
+                        ],
                       ),
-                    ),
-                    controller: input,
-                    onSubmitted: (value) {
-                      doprint();
-                    },
-                  ),
-                ),
-                const SizedBox(width: 20),
-                IconButton(
-                  icon: const Icon(Icons.camera),
-                  // label: const Text("扫码"),
-                  onPressed: () {
-                    doBarcodeScan();
-                  },
-                ),
-                const SizedBox(width: 20),
-                FilledButton(
-                  // icon: const Icon(Icons.print),
-                  // label: const Text("打印"),
-                  child: const Text('打印'),
-                  onPressed: () {
-                    doprint();
-                  },
-                )
-              ]),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  DropdownButton(
-                    hint: const Text('192.168.2.189'),
-                    items: sqlItems,
-                    value: sqlselect,
-                    onChanged: (sql) => {
-                      setState(() {
-                        sqlselect = sql!;
-                        initsql();
-                      })
-                    },
-                  ),
-                  const SizedBox(width: 20),
-                  if (sqlstatus == true)
-                    Image.asset("images/right.png", width: 20, height: 20),
-                  if (sqlstatus == false)
-                    Image.asset("images/wrongs.png", width: 20, height: 20),
-                  const Spacer(),
-                  DropdownButton(
-                    hint: const Text('请选择打印机'),
-                    items: printerItems
-                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
-                    value: printerselect,
-                    onChanged: (printer) => {
-                      setState(() {
-                        printerselect = printer!;
-                      })
-                    },
-                  ),
-                  const SizedBox(width: 20),
-                  if (printerItems.isEmpty)
-                    Image.asset("images/wrongs.png", width: 20, height: 20),
-                  if (printerselect == null && printerItems.isNotEmpty)
-                    Image.asset("images/wait.png", width: 20, height: 20),
-                  if (printerselect != null)
-                    Image.asset("images/right.png", width: 20, height: 20),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  DropdownButton(
-                    hint: const Text('请选择模板'),
-                    items: btwItems
-                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
-                    value: btwselect,
-                    onChanged: (btw) => {setState(() => btwselect = btw!)},
-                  ),
-                  const SizedBox(width: 20),
-                  if (btwItems.isEmpty)
-                    Image.asset("images/wrongs.png", width: 20, height: 20),
-                  if (btwselect == null && btwItems.isNotEmpty)
-                    Image.asset("images/wait.png", width: 20, height: 20),
-                  if (btwselect != null)
-                    Image.asset("images/right.png", width: 20, height: 20),
-                  // const SizedBox(width: 20),
-                  const Spacer(),
-                  const Text("RFT小数位:"),
-                  Checkbox(
-                    value: checkboxSelected, activeColor: Colors.red, //选中时的颜色
-                    onChanged: (value) {
-                      setState(() {
-                        checkboxSelected = value!;
-                      });
-                    },
+                      const SizedBox(height: 10),
+                      Expanded(
+                          child: Text(
+                        text,
+                        style: const TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold),
+                      )),
+                    ],
                   )
-                ],
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                  child: Text(
-                text,
-                style:
-                    const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              )),
-            ],
-          ),
-        ),
+                : Column(
+                    children: [
+                      Row(children: [
+                        Expanded(
+                          flex: 4,
+                          child: TextField(
+                            autofocus: true,
+                            decoration: InputDecoration(
+                              // prefixIcon: const Icon(Icons.camera),
+                              hintText: "扫码进行打印...",
+                              suffixIcon: IconButton(
+                                onPressed: input.clear,
+                                icon: const Icon(Icons.clear),
+                              ),
+                            ),
+                            controller: input,
+                            onSubmitted: (value) {
+                              doprint();
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        IconButton(
+                          icon: const Icon(Icons.camera),
+                          // label: const Text("扫码"),
+                          onPressed: () {
+                            doBarcodeScan();
+                          },
+                        ),
+                        const SizedBox(width: 20),
+                        FilledButton(
+                          // icon: const Icon(Icons.print),
+                          // label: const Text("打印"),
+                          child: const Text('打印'),
+                          onPressed: () {
+                            doprint();
+                          },
+                        )
+                      ]),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          DropdownButton(
+                            hint: const Text('192.168.2.189'),
+                            items: sqlItems,
+                            value: sqlselect,
+                            onChanged: (sql) => {
+                              setState(() {
+                                sqlselect = sql!;
+                                initsql();
+                              })
+                            },
+                          ),
+                          const SizedBox(width: 20),
+                          if (sqlstatus == true)
+                            Image.asset("images/right.png",
+                                width: 20, height: 20),
+                          if (sqlstatus == false)
+                            Image.asset("images/wrongs.png",
+                                width: 20, height: 20),
+                          const Spacer(),
+                          DropdownButton(
+                            hint: const Text('请选择打印机'),
+                            items: printerItems
+                                .map((e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)))
+                                .toList(),
+                            value: printerselect,
+                            onChanged: (printer) => {
+                              setState(() {
+                                printerselect = printer!;
+                              })
+                            },
+                          ),
+                          const SizedBox(width: 20),
+                          if (printerItems.isEmpty)
+                            Image.asset("images/wrongs.png",
+                                width: 20, height: 20),
+                          if (printerselect == null && printerItems.isNotEmpty)
+                            Image.asset("images/wait.png",
+                                width: 20, height: 20),
+                          if (printerselect != null)
+                            Image.asset("images/right.png",
+                                width: 20, height: 20),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          DropdownButton(
+                            hint: const Text('请选择模板'),
+                            items: btwItems
+                                .map((e) =>
+                                    DropdownMenuItem(value: e, child: Text(e)))
+                                .toList(),
+                            value: btwselect,
+                            onChanged: (btw) =>
+                                {setState(() => btwselect = btw!)},
+                          ),
+                          const SizedBox(width: 20),
+                          if (btwItems.isEmpty)
+                            Image.asset("images/wrongs.png",
+                                width: 20, height: 20),
+                          if (btwselect == null && btwItems.isNotEmpty)
+                            Image.asset("images/wait.png",
+                                width: 20, height: 20),
+                          if (btwselect != null)
+                            Image.asset("images/right.png",
+                                width: 20, height: 20),
+                          // const SizedBox(width: 20),
+                          const Spacer(),
+                          const Text("RFT小数位:"),
+                          Checkbox(
+                            value: checkboxSelected,
+                            activeColor: Colors.red, //选中时的颜色
+                            onChanged: (value) {
+                              setState(() {
+                                checkboxSelected = value!;
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                          child: Text(
+                        text,
+                        style: const TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold),
+                      )),
+                    ],
+                  )),
       ),
     );
   }
